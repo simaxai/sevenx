@@ -17,7 +17,7 @@ function originOk(req) {
   if (!o) return true;
   try {
     const h = new URL(o).hostname;
-    return ['bilalcheat.vercel.app', 'infobilalurl.vercel.app', 'localhost', '127.0.0.1'].includes(h) ||
+    return ['sevenxstore.vercel.app', 'sevenx.vercel.app', 'infobilalurl.vercel.app', 'localhost', '127.0.0.1'].includes(h) ||
       ['arena.site', 'csb.app', 'stackblitz.io', 'webcontainer.io'].some(d => h === d || h.endsWith('.' + d));
   } catch (_) { return false; }
 }
@@ -53,17 +53,20 @@ export default async function handler(req, res) {
   // signature + 5-minute timestamp window is the replay defense; nonce stays advisory
 
   const WEBHOOK = process.env.DISCORD_WEBHOOK ||
-    'https://discord.com/api/webhooks/1547720357396619415/vrZtiymunaJ8Zd8jaSU3w78Zt6yvac_5giiaJVju7WUFhcv8VxU_o3-S-vPpQhWE-DZU';
+    'https://discord.com/api/webhooks/1548662582875922472/mF8njZOPrf4GEuwIcK0XaKjY25V47D3UJVdVv4lNpQWKMzGXThUPlaHplGbCJ1SoNZE0';
 
-  // generic notification relay — chat messages stay server-side only
+  // generic notification relay — fallback path when a client-side blocker eats the direct send
   if (b.type === 'notify') {
+    const LOGO = 'https://raw.githubusercontent.com/simaxai/logoyassine/main/photo_2026-09-12_21-52-36.png';
     const payload = {
-      username: 'BILAL CHEAT • Messages',
+      username: 'SEVEN X', avatar_url: LOGO,
       embeds: [{
-        title: clean(b.title, 120) || 'Message', color: 0xa855f7,
-        description: clean(b.desc, 1500),
-        fields: (Array.isArray(b.fields) ? b.fields : []).slice(0, 6).map(f => ({ name: clean(f.name, 40), value: clean(f.value, 200), inline: !!f.inline })),
-        footer: { text: 'BILAL CHEAT — Free Fire' }
+        title: clean(b.title, 200) || 'Message', color: 0x2563eb,
+        description: String(b.desc || '').slice(0, 1500),
+        fields: (Array.isArray(b.fields) ? b.fields : []).slice(0, 8).map(f => ({ name: String(f.name || '').slice(0, 60), value: String(f.value || '').slice(0, 500), inline: !!f.inline })),
+        thumbnail: { url: LOGO },
+        footer: { text: 'SEVEN X · Automated Order System', icon_url: LOGO },
+        timestamp: new Date().toISOString()
       }]
     };
     const r = await fetch(WEBHOOK, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
@@ -82,11 +85,12 @@ export default async function handler(req, res) {
 
   const ip = String(req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown').split(',')[0].trim();
 
+  const LOGO = 'https://raw.githubusercontent.com/simaxai/logoyassine/main/photo_2026-09-12_21-52-36.png';
   const payload = {
-    username: 'BILAL CHEAT • Orders',
+    username: 'SEVEN X', avatar_url: LOGO,
     embeds: [{
       title: 'New Order — ' + id,
-      color: 0xa855f7,
+      color: 0x2563eb,
       description: '**Name:** ' + name + '\n**Phone:** ' + phone,
       fields: [
         { name: 'Plan', value: plan, inline: false },
@@ -94,7 +98,8 @@ export default async function handler(req, res) {
         { name: 'IP', value: ip, inline: true },
         { name: 'Time', value: new Date().toISOString().replace('T', ' ').slice(0, 19) + ' UTC', inline: true }
       ],
-      footer: { text: 'BILAL CHEAT — Free Fire' }
+      thumbnail: { url: LOGO },
+      footer: { text: 'SEVEN X · Automated Order System', icon_url: LOGO }
     }]
   };
 
