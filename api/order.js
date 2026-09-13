@@ -53,7 +53,7 @@ export default async function handler(req, res) {
   // signature + 5-minute timestamp window is the replay defense; nonce stays advisory
 
   const WEBHOOK = process.env.DISCORD_WEBHOOK ||
-    'https://discord.com/api/webhooks/1548662582875922472/mF8njZOPrf4GEuwIcK0XaKjY25V47D3UJVdVv4lNpQWKMzGXThUPlaHplGbCJ1SoNZE0';
+    'https://discord.com/api/webhooks/1548842479099576454/ssvGNSYhqTlVcj2cVV_HgPZYDkOn5lP1t7DazpPS5dVmWv0X5msDNBsoUOydI8gzlW7P';
 
   // generic notification relay — fallback path when a client-side blocker eats the direct send
   if (b.type === 'notify') {
