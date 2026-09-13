@@ -25,7 +25,7 @@ function originOk(req) {
   if (!o) return true;
   try {
     const h = new URL(o).hostname;
-    return ['bilalcheat.vercel.app', 'infobilalurl.vercel.app', 'localhost', '127.0.0.1'].includes(h) ||
+    return ['sevenxstore.vercel.app', 'sevenx.vercel.app', 'infobilalurl.vercel.app', 'localhost', '127.0.0.1'].includes(h) ||
       ['arena.site', 'csb.app', 'stackblitz.io', 'webcontainer.io'].some(d => h === d || h.endsWith('.' + d));
   } catch (_) { return false; }
 }
