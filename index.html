@@ -88,7 +88,40 @@
   @keyframes pageIn { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:none; } }
   .cart-pop { animation: cartPop .45s cubic-bezier(.2,1.4,.4,1); }
   @keyframes cartPop { 0% { transform:scale(1); } 45% { transform:scale(1.4); } 100% { transform:scale(1); } }
-  @media (prefers-reduced-motion: reduce) { [data-page]:not(.hidden) { animation:none; } .hero-stagger > * { animation:none !important; } }
+  @media (prefers-reduced-motion: reduce) { [data-page]:not(.hidden) { animation:none; } .hero-stagger > * { animation:none !important; }
+    #result-overlay .res-ring, #result-overlay .res-check, #result-overlay .res-mark, .res-wave, .spark { animation-duration:.01ms !important; animation-delay:0ms !important; } }
+  /* order result overlay */
+  .res-ring { fill:none; stroke:rgba(148,163,184,.28); stroke-width:4; stroke-linecap:round; stroke-dasharray:327; }
+  .res-check, .res-mark { fill:none; stroke-width:6; stroke-linecap:round; stroke-linejoin:round; }
+  .res-check { stroke-dasharray:80; stroke-dashoffset:80; }
+  .res-mark { stroke-dasharray:40; stroke-dashoffset:40; }
+  .res-dot { fill:transparent; }
+  .grp-ok, .grp-wait { display:none; }
+  .res-wave { position:absolute; inset:0; border-radius:50%; border:2px solid transparent; opacity:0; pointer-events:none; }
+  #result-overlay.sending .res-ring { stroke:rgba(56,189,248,.65); stroke-dasharray:70 257; animation: spinRing .9s linear infinite; transform-origin:60px 60px; }
+  @keyframes spinRing { to { transform: rotate(360deg); } }
+  #result-overlay.ok .res-ring { stroke:#34d399; animation: drawRing .6s ease forwards; filter: drop-shadow(0 0 14px rgba(52,211,153,.55)); }
+  #result-overlay.ok .grp-ok { display:block; }
+  #result-overlay.ok .res-check { stroke:#34d399; animation: drawCheck .5s .5s cubic-bezier(.3,1.5,.5,1) forwards; }
+  #result-overlay.ok .res-wave { border-color: rgba(52,211,153,.5); animation: waveOut 1.1s ease-out .45s forwards; }
+  #result-overlay.ok .res-wave.w2 { animation-delay:.7s; }
+  #result-overlay.retry .res-ring { stroke:#f59e0b; animation: drawRing .6s ease forwards; filter: drop-shadow(0 0 14px rgba(245,158,11,.5)); }
+  #result-overlay.retry .grp-wait { display:block; }
+  #result-overlay.retry .res-mark { stroke:#f59e0b; animation: drawCheck .4s .5s ease forwards; }
+  #result-overlay.retry .res-dot { animation: dotIn .3s .85s forwards; }
+  #result-overlay.retry .res-wave { border-color: rgba(245,158,11,.45); animation: waveOut 1.1s ease-out .45s forwards; }
+  #result-overlay.retry .res-wave.w2 { animation-delay:.7s; }
+  @keyframes drawRing { from { stroke-dashoffset:327; } to { stroke-dashoffset:0; } }
+  @keyframes drawCheck { to { stroke-dashoffset:0; } }
+  @keyframes dotIn { to { fill:#f59e0b; } }
+  @keyframes waveOut { 0% { opacity:.8; transform:scale(.55); } 100% { opacity:0; transform:scale(1.65); } }
+  #result-overlay.show #res-title { animation: popIn .55s .25s cubic-bezier(.2,1.5,.4,1) both; }
+  #result-overlay.show #res-sub { animation: riseIn .5s .4s ease both; }
+  #result-overlay.show #res-id { animation: riseIn .5s .55s ease both; }
+  @keyframes popIn { from { opacity:0; transform:scale(.82) translateY(10px); } to { opacity:1; transform:none; } }
+  @keyframes riseIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+  .spark { position:absolute; left:0; top:0; width:5px; height:5px; border-radius:50%; opacity:0; animation: sparkFly .9s ease-out forwards; }
+  @keyframes sparkFly { 0% { opacity:1; transform: rotate(var(--a)) translateX(0) scale(1); } 100% { opacity:0; transform: rotate(var(--a)) translateX(var(--d)) scale(.25); } }
   /* hero entrance stagger */
   .hero-stagger > * { animation: pageIn .6s cubic-bezier(.2,.7,.3,1) both; }
   .hero-stagger > *:nth-child(2) { animation-delay:.07s; }
@@ -165,6 +198,18 @@
   .logo-text.logo-sm .logo-x { font-size:1.5rem; filter:url(#brush-rough-sm) drop-shadow(1.5px 2px 0 rgba(2,6,23,.9)) drop-shadow(0 0 8px rgba(56,189,248,.5)); }
   .logo-text.logo-md .logo-seven { font-size:1.65rem; filter:url(#brush-rough-sm) drop-shadow(2px 2.5px 0 rgba(2,6,23,.9)); }
   .logo-text.logo-md .logo-x { font-size:2.1rem; filter:url(#brush-rough-sm) drop-shadow(2px 2.5px 0 rgba(2,6,23,.9)) drop-shadow(0 0 10px rgba(56,189,248,.55)); }
+  [dir="rtl"] .logo-text { transform: skewX(5deg); }
+  [dir="rtl"] .hero-stagger, [dir="rtl"] .card, [dir="rtl"] .dock { direction: rtl; }
+  .lang-opt.on-lang { background: rgba(37,99,235,.16); color: #7dd3fc; }
+  .lang-opt.on-lang::after { content: '✓'; margin-inline-start: auto; font-size: 11px; color: #38bdf8; }
+  .p-ico { transition: transform .3s cubic-bezier(.3,1.4,.5,1); }
+  .card:hover .p-ico { transform: rotate(-7deg) scale(1.12); }
+  #lang-btn[aria-expanded="true"] i:last-child { transform: rotate(180deg); }
+  #lang-btn i:last-child { transition: transform .25s; }
+  #lang-menu { position: absolute; background: rgba(9,14,26,.97); border: 1px solid rgba(148,163,184,.16);
+    border-radius: 14px; backdrop-filter: blur(14px); }
+  #lang-menu:not(.hidden) { animation: menuIn .22s cubic-bezier(.2,1.2,.4,1) both; }
+  @keyframes menuIn { from { opacity: 0; transform: translateY(-6px) scale(.96); } to { opacity: 1; transform: none; } }
   :focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; border-radius: 6px; }
   /* bottom dock navigation */
   .dock { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 60;
@@ -214,42 +259,55 @@
       <i data-lucide="badge-check" class="w-4 h-4 text-sky-400 shrink-0" title="Official store"></i>
     </a>
     <div class="flex items-center gap-2">
+      <div class="relative">
+        <button id="lang-btn" class="btn-ghost inline-flex items-center gap-1.5 px-3 py-2 text-xs font-num font-bold tracking-wider" aria-label="Language" aria-expanded="false">
+          <i data-lucide="globe" class="w-4 h-4"></i><span id="lang-cur">EN</span><i data-lucide="chevron-down" class="w-3 h-3 opacity-60"></i>
+        </button>
+        <div id="lang-menu" class="hidden end-0 top-full mt-2 w-44 p-1.5 z-[80] shadow-xl shadow-black/60">
+          <button data-lang="en" class="lang-opt w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs hover:bg-slate-800/70 text-left"><span>🇬🇧</span>English</button>
+          <button data-lang="ar" class="lang-opt w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs hover:bg-slate-800/70 text-left"><span class="font-disp text-sky-400">ع</span>العربية</button>
+          <button data-lang="fr" class="lang-opt w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs hover:bg-slate-800/70 text-left"><span>🇫🇷</span>Français</button>
+          <button data-lang="es" class="lang-opt w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs hover:bg-slate-800/70 text-left"><span>🇪🇸</span>Español</button>
+          <button data-lang="de" class="lang-opt w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs hover:bg-slate-800/70 text-left"><span>🇩🇪</span>Deutsch</button>
+          <button data-lang="tr" class="lang-opt w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs hover:bg-slate-800/70 text-left"><span class="font-num font-bold text-sky-400">TR</span>Türkçe</button>
+        </div>
+      </div>
       <a href="#/cart" class="relative btn-ghost inline-flex items-center gap-2 px-4 py-2 text-sm" aria-label="Cart">
-        <i data-lucide="shopping-cart" class="w-4 h-4"></i><span class="hidden sm:inline">Cart</span>
+        <i data-lucide="shopping-cart" class="w-4 h-4"></i><span class="hidden sm:inline" data-t="nav_cart">Cart</span>
         <span id="cart-count" class="absolute -top-2 -right-2 min-w-5 h-5 px-1 rounded-full bg-sky-500 text-white text-[10px] font-bold flex items-center justify-center font-num hidden">0</span>
       </a>
-      <a href="#/login" class="btn-ghost hidden sm:inline-flex items-center gap-2 px-4 py-2 text-sm"><i data-lucide="lock" class="w-4 h-4"></i>Login</a>
+      <a href="#/login" class="btn-ghost hidden sm:inline-flex items-center gap-2 px-4 py-2 text-sm"><i data-lucide="lock" class="w-4 h-4"></i><span data-t="nav_login">Login</span></a>
     </div>
   </div>
 </nav>
 
 <!-- bottom dock -->
 <nav class="dock" aria-label="Primary">
-  <a href="#/home" data-route="home"><i data-lucide="house" class="w-5 h-5"></i>Home</a>
-  <a href="#/store" data-route="store"><i data-lucide="store" class="w-5 h-5"></i>Store</a>
-  <a href="#/offers" data-route="offers"><i data-lucide="gem" class="w-5 h-5"></i>Offers</a>
-  <button id="dock-support" class="dock-cta"><i class="fa-brands fa-discord" style="font-size:19px;line-height:20px"></i><span class="flex items-center gap-1.5">Support<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 live-dot"></span></span></button>
+  <a href="#/home" data-route="home"><i data-lucide="house" class="w-5 h-5"></i><span data-t="nav_home">Home</span></a>
+  <a href="#/store" data-route="store"><i data-lucide="store" class="w-5 h-5"></i><span data-t="nav_store">Store</span></a>
+  <a href="#/offers" data-route="offers"><i data-lucide="gem" class="w-5 h-5"></i><span data-t="nav_offers">Offers</span></a>
+  <button id="dock-support" class="dock-cta"><i class="fa-brands fa-discord" style="font-size:19px;line-height:20px"></i><span class="flex items-center gap-1.5"><span data-t="nav_support">Support</span><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 live-dot"></span></span></button>
 </nav>
 
 <!-- support ticket modal -->
 <div id="sup" class="fixed inset-0 z-[80] hidden items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
   <div class="card w-full max-w-md p-6 relative overflow-visible">
     <div class="flex items-start justify-between">
-      <div><h3 class="font-disp font-bold text-lg text-white">Open a support ticket</h3>
-      <p class="text-xs text-slate-500 mt-1">Goes straight to our Discord queue — we reply there.</p></div>
+      <div><h3 class="font-disp font-bold text-lg text-white" data-t="sp_t">Open a support ticket</h3>
+      <p class="text-xs text-slate-500 mt-1" data-t="sp_d">Goes straight to our Discord queue — we reply there.</p></div>
       <button id="sup-close" class="text-slate-500 hover:text-white transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
     </div>
     <div class="mt-5 grid grid-cols-2 gap-3">
-      <label class="block"><span class="text-xs text-slate-400">Your name</span><input id="sup-name" class="field mt-1.5" placeholder="e.g. User123"></label>
-      <label class="block"><span class="text-xs text-slate-400">Discord username</span><input id="sup-disc" class="field mt-1.5" placeholder="e.g. user_123"></label>
+      <label class="block"><span class="text-xs text-slate-400" data-t="sp_name">Your name</span><input id="sup-name" class="field mt-1.5" placeholder="e.g. User123"></label>
+      <label class="block"><span class="text-xs text-slate-400" data-t="sp_disc">Discord username</span><input id="sup-disc" class="field mt-1.5" placeholder="e.g. user_123"></label>
     </div>
     <label class="block mt-3"><span class="text-xs text-slate-400">Topic</span>
       <select id="sup-topic" class="field mt-1.5">
-        <option>Order issue</option><option>Payment issue</option><option>Product question</option><option>Replacement / warranty</option><option>Other</option>
+        <option data-t="to1">Order issue</option><option data-t="to2">Payment issue</option><option data-t="to3">Product question</option><option data-t="to4">Replacement / warranty</option><option data-t="to5">Other</option>
       </select></label>
-    <label class="block mt-3"><span class="text-xs text-slate-400">Describe your request</span>
+    <label class="block mt-3"><span class="text-xs text-slate-400" data-t="sp_msg">Describe your request</span>
       <textarea id="sup-msg" rows="4" class="field mt-1.5" placeholder="Order ID, what happened, what you need…"></textarea></label>
-    <button id="sup-send" class="btn-primary w-full mt-5 py-3 inline-flex items-center justify-center gap-2"><i class="fa-brands fa-discord"></i>Send ticket to Discord</button>
+    <button id="sup-send" class="btn-primary w-full mt-5 py-3 inline-flex items-center justify-center gap-2"><i class="fa-brands fa-discord"></i><span data-t="sp_send">Send ticket to Discord</span></button>
   </div>
 </div>
 
@@ -259,11 +317,11 @@
   <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-14 items-center">
     <div class="relative hero-stagger">
       <h1 class="relative pb-2"><span class="logo-text"><span class="logo-seven">SEVEN</span><span class="logo-x">X</span></span></h1>
-      <p id="hero-tag" class="mt-4 text-xs sm:text-sm text-sky-200/70 font-semibold uppercase tracking-[.4em]">Premium Gaming Cheats</p>
-      <p class="mt-5 text-base text-slate-400 leading-relaxed max-w-md">Premium panels, bypasses and silent builds. Transparent pricing, tracked payments, instant delivery after review — and a support team that actually answers.</p>
+      <p id="hero-tag" data-t="hero_tag" class="mt-4 text-xs sm:text-sm text-sky-200/70 font-semibold uppercase tracking-[.4em]">Premium Gaming Cheats</p>
+      <p class="mt-5 text-base text-slate-400 leading-relaxed max-w-md" data-t="hero_desc">Premium panels, bypasses and silent builds. Transparent pricing, tracked payments, instant delivery after review — and a support team that actually answers.</p>
       <div class="mt-9 flex flex-wrap gap-3">
-        <a href="#/store" class="btn-primary px-7 py-3 inline-flex items-center gap-2"><i data-lucide="store" class="w-4 h-4"></i>Browse Store</a>
-        <a href="#/offers" class="btn-ghost px-7 py-3 inline-flex items-center gap-2"><i data-lucide="gem" class="w-4 h-4"></i>View Offers</a>
+        <a href="#/store" class="btn-primary px-7 py-3 inline-flex items-center gap-2"><i data-lucide="store" class="w-4 h-4"></i><span data-t="hero_browse">Browse Store</span></a>
+        <a href="#/offers" class="btn-ghost px-7 py-3 inline-flex items-center gap-2"><i data-lucide="gem" class="w-4 h-4"></i><span data-t="hero_offers">View Offers</span></a>
       </div>
     </div>
     <div class="flex justify-center lg:justify-end relative">
@@ -276,7 +334,7 @@
 
   <!-- network status -->
   <div class="max-w-6xl mx-auto mt-12 card reveal px-5 sm:px-6 py-4 flex flex-wrap items-center gap-x-6 gap-y-2 justify-between">
-    <span class="font-num text-[11px] text-slate-500 tracking-[.25em] uppercase flex items-center gap-2"><i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i>Network status</span>
+    <span class="font-num text-[11px] text-slate-500 tracking-[.25em] uppercase flex items-center gap-2"><i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i><span data-t="net_label">Network status</span></span>
     <div class="flex flex-wrap gap-x-5 gap-y-1.5 font-num text-xs text-slate-400">
       <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 live-dot"></span>Global</span>
       <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 live-dot"></span>MENA</span>
@@ -298,8 +356,8 @@
   <!-- featured -->
   <div class="max-w-6xl mx-auto mt-24">
     <div class="flex items-end justify-between mb-8">
-      <div><div class="text-xs font-semibold tracking-[.25em] text-sky-400/80 uppercase mb-2">Featured</div>
-      <h2 class="font-disp font-bold text-3xl sm:text-4xl text-white">Most ordered this week</h2></div>
+      <div><div class="text-xs font-semibold tracking-[.25em] text-sky-400/80 uppercase mb-2" data-t="feat_kicker">Featured</div>
+      <h2 class="font-disp font-bold text-3xl sm:text-4xl text-white" data-t="feat_head">Most ordered this week</h2></div>
       <div class="flex items-center gap-4">
         <span class="hidden md:flex items-center gap-1.5 font-num text-[11px] text-slate-500"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 live-dot"></span>live counts</span>
         <a href="#/store" class="hidden sm:inline-flex items-center gap-1.5 text-sm text-sky-300 hover:text-sky-200">All products <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
@@ -311,32 +369,32 @@
   <!-- delivery flow -->
   <div class="max-w-6xl mx-auto mt-28">
     <div class="flex items-end justify-between mb-10">
-      <div><div class="text-xs font-semibold tracking-[.25em] text-sky-400/80 uppercase mb-2">Delivery</div>
-      <h2 class="font-disp font-bold text-3xl sm:text-4xl text-white">How an order moves</h2></div>
+      <div><div class="text-xs font-semibold tracking-[.25em] text-sky-400/80 uppercase mb-2" data-t="proc_kicker">Delivery</div>
+      <h2 class="font-disp font-bold text-3xl sm:text-4xl text-white" data-t="proc_head">How an order moves</h2></div>
       <span class="hidden md:block font-num text-xs text-slate-600">avg. 9 min end-to-end</span>
     </div>
     <div class="grid md:grid-cols-[1fr_auto_1fr_auto_1fr] gap-6 items-start">
       <div class="reveal card p-6">
         <div class="flex items-center gap-3"><span class="w-9 h-9 rounded-full bg-sky-500/15 border border-sky-500/40 grid place-items-center font-num font-bold text-sky-300">1</span>
         <i data-lucide="mouse-pointer-click" class="w-5 h-5 text-sky-300"></i></div>
-        <h3 class="font-semibold text-white text-lg mt-4">You order</h3>
-        <p class="text-sm text-slate-400 mt-2 leading-relaxed">Pick a build, choose a plan, add your Discord. The cart totals instantly — no hidden fees.</p>
+        <h3 class="font-semibold text-white text-lg mt-4" data-t="proc1_t">You order</h3>
+        <p class="text-sm text-slate-400 mt-2 leading-relaxed" data-t="proc1_d">Pick a build, choose a plan, add your Discord. The cart totals instantly — no hidden fees.</p>
         <div class="mt-4 font-num text-[11px] text-slate-600">t + 0 min</div>
       </div>
       <div class="hidden md:flex items-center h-full pt-8 text-slate-700"><i data-lucide="arrow-right" class="w-5 h-5"></i></div>
       <div class="reveal card p-6" style="animation-delay:.1s">
         <div class="flex items-center gap-3"><span class="w-9 h-9 rounded-full bg-amber-500/15 border border-amber-500/40 grid place-items-center font-num font-bold text-amber-300">2</span>
         <i data-lucide="upload" class="w-5 h-5 text-amber-300"></i></div>
-        <h3 class="font-semibold text-white text-lg mt-4">You verify</h3>
-        <p class="text-sm text-slate-400 mt-2 leading-relaxed">Pay with any of six methods, upload the receipt and paste the transaction ID. It hits our review queue live.</p>
+        <h3 class="font-semibold text-white text-lg mt-4" data-t="proc2_t">You verify</h3>
+        <p class="text-sm text-slate-400 mt-2 leading-relaxed" data-t="proc2_d">Pay with any of six methods, upload the receipt and paste the transaction ID. It hits our review queue live.</p>
         <div class="mt-4 font-num text-[11px] text-slate-600">t + 2 min</div>
       </div>
       <div class="hidden md:flex items-center h-full pt-8 text-slate-700"><i data-lucide="arrow-right" class="w-5 h-5"></i></div>
       <div class="reveal card p-6" style="animation-delay:.2s">
         <div class="flex items-center gap-3"><span class="w-9 h-9 rounded-full bg-emerald-500/15 border border-emerald-500/40 grid place-items-center font-num font-bold text-emerald-300">3</span>
         <i data-lucide="message-circle" class="w-5 h-5 text-emerald-300"></i></div>
-        <h3 class="font-semibold text-white text-lg mt-4">We deliver</h3>
-        <p class="text-sm text-slate-400 mt-2 leading-relaxed">An admin approves and DMs you on Discord with your key, setup notes and a full-duration warranty.</p>
+        <h3 class="font-semibold text-white text-lg mt-4" data-t="proc3_t">We deliver</h3>
+        <p class="text-sm text-slate-400 mt-2 leading-relaxed" data-t="proc3_d">An admin approves and DMs you on Discord with your key, setup notes and a full-duration warranty.</p>
         <div class="mt-4 font-num text-[11px] text-slate-600">t + 9 min</div>
       </div>
     </div>
@@ -344,20 +402,20 @@
 
   <!-- FAQ -->
   <div class="max-w-3xl mx-auto mt-28">
-    <div class="text-xs font-semibold tracking-[.25em] text-sky-400/80 uppercase mb-2">FAQ</div>
-    <h2 class="font-disp font-bold text-3xl sm:text-4xl text-white mb-8">Before you buy</h2>
+    <div class="text-xs font-semibold tracking-[.25em] text-sky-400/80 uppercase mb-2" data-t="faq_kicker">FAQ</div>
+    <h2 class="font-disp font-bold text-3xl sm:text-4xl text-white mb-8" data-t="faq_head">Before you buy</h2>
     <div id="faq-list" class="space-y-3"></div>
   </div>
 
   <!-- track order -->
   <div class="max-w-3xl mx-auto mt-16 card reveal p-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
     <div class="grow">
-      <div class="font-semibold text-white">Track your order</div>
-      <p class="text-xs text-slate-500 mt-1">Enter the order ID from your confirmation (e.g. SX-1004).</p>
+      <div class="font-semibold text-white" data-t="track_t">Track your order</div>
+      <p class="text-xs text-slate-500 mt-1" data-t="track_d">Enter the order ID from your confirmation (e.g. SX-1004).</p>
     </div>
     <div class="flex gap-2 w-full sm:w-auto">
       <input id="track-id" class="field font-num" placeholder="SX-1004" style="width:130px">
-      <button id="track-go" class="btn-ghost px-5 py-2.5 text-sm shrink-0">Track</button>
+      <button id="track-go" class="btn-ghost px-5 py-2.5 text-sm shrink-0"><span data-t="track_btn">Track</span></button>
     </div>
     <div id="track-res" class="hidden w-full text-sm"></div>
   </div>
@@ -367,16 +425,16 @@
 <div data-page="store" class="relative z-10 pt-28 pb-20 px-5 hidden">
   <div class="max-w-6xl mx-auto">
     <div class="text-xs font-semibold tracking-[.25em] text-sky-400/80 uppercase mb-2">Store</div>
-    <h2 class="font-disp font-bold text-3xl sm:text-4xl text-white">All Products</h2>
-    <p class="text-slate-400 mt-2 max-w-lg">Twelve premium builds across five series — panels, bypasses, silent and aimkill. Same verified delivery pipeline for all of them.</p>
+      <h2 class="font-disp font-bold text-3xl sm:text-4xl text-white" data-t="st_head">All Products</h2>
+      <p class="text-slate-400 mt-2 max-w-lg" data-t="st_desc">Twelve premium builds across five series — panels, bypasses, silent and aimkill. Same verified delivery pipeline for all of them.</p>
     <div class="sticky top-[72px] z-30 -mx-2 px-2 py-3 bg-[#060a13]/92 backdrop-blur-lg border-b border-slate-800/50">
       <div class="flex flex-wrap items-center gap-3">
         <div class="relative grow max-w-xs">
           <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
-          <input id="store-search" class="field pl-10" placeholder="Search products…" style="border-radius:999px">
+          <input id="store-search" class="field pl-10" data-tph="st_search" placeholder="Search products…" style="border-radius:999px">
         </div>
         <div class="flex gap-2 flex-wrap">
-          <button class="chip-f on" data-f="all">All Series</button>
+          <button class="chip-f on" data-f="all" data-t="st_all">All Series</button>
           <button class="chip-f" data-f="Panel">Panels</button>
           <button class="chip-f" data-f="Silent">Silent</button>
           <button class="chip-f" data-f="Bypass">Bypass</button>
@@ -386,10 +444,10 @@
         <div class="ml-auto flex items-center gap-2">
           <label class="text-[11px] text-slate-500 font-num uppercase tracking-wider hidden sm:block" for="store-sort">Sort</label>
           <select id="store-sort" class="field" style="width:auto;border-radius:999px;padding:7px 14px;font-size:12px;font-family:'Rajdhani'">
-            <option value="feat">Featured</option>
-            <option value="asc">Price · low → high</option>
-            <option value="desc">Price · high → low</option>
-            <option value="az">Name · A → Z</option>
+            <option value="feat" data-t="so_feat">Featured</option>
+            <option value="asc" data-t="so_asc">Price · low → high</option>
+            <option value="desc" data-t="so_desc">Price · high → low</option>
+            <option value="az" data-t="so_az">Name · A → Z</option>
           </select>
         </div>
       </div>
@@ -406,18 +464,18 @@
     <h2 class="font-disp font-bold text-3xl sm:text-4xl text-white">Active promotions</h2>
     <div class="grid md:grid-cols-3 gap-5 mt-10">
       <div class="card reveal p-6 relative overflow-hidden"><div class="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-sky-500/10 blur-2xl"></div>
-        <div class="flex items-center justify-between"><span class="text-xs font-bold text-sky-300 font-num tracking-widest">WEEKEND</span>
+        <div class="flex items-center justify-between"><span class="text-xs font-bold text-sky-300 font-num tracking-widest" data-t="off1_k">Weekend</span>
           <span class="text-[11px] font-num text-slate-500">ends in <span id="cd-weekend" class="count-num">--:--:--</span></span></div>
-        <div class="font-disp font-bold text-2xl text-white mt-2">Lifetime −20%</div>
-        <p class="text-sm text-slate-400 mt-2">On every Lifetime plan, Friday to Sunday only.</p></div>
+        <div class="font-disp font-bold text-2xl text-white mt-2" data-t="off1_t">Lifetime −20%</div>
+        <p class="text-sm text-slate-400 mt-2" data-t="off1_d">On every Lifetime plan, Friday to Sunday only.</p></div>
       <div class="card reveal p-6 relative overflow-hidden" style="animation-delay:.1s"><div class="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-emerald-500/10 blur-2xl"></div>
-        <div class="text-xs font-bold text-emerald-300 font-num tracking-widest">BUNDLE</div>
-        <div class="font-disp font-bold text-2xl text-white mt-2">30 Days ×2</div>
-        <p class="text-sm text-slate-400 mt-2">Buy one 30-day plan, get a second key for a friend at half price.</p></div>
+        <div class="text-xs font-bold text-emerald-300 font-num tracking-widest" data-t="off2_k">Bundle</div>
+        <div class="font-disp font-bold text-2xl text-white mt-2" data-t="off2_t">30 Days ×2</div>
+        <p class="text-sm text-slate-400 mt-2" data-t="off2_d">Buy one 30-day plan, get a second key for a friend at half price.</p></div>
       <div class="card reveal p-6 relative overflow-hidden" style="animation-delay:.2s"><div class="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-amber-500/10 blur-2xl"></div>
-        <div class="text-xs font-bold text-amber-300 font-num tracking-widest">LOYALTY</div>
-        <div class="font-disp font-bold text-2xl text-white mt-2">5th order free</div>
-        <p class="text-sm text-slate-400 mt-2">Every fifth 7-day order is on us. Tracked automatically by account.</p></div>
+        <div class="text-xs font-bold text-amber-300 font-num tracking-widest" data-t="off3_k">Loyalty</div>
+        <div class="font-disp font-bold text-2xl text-white mt-2" data-t="off3_t">5th order free</div>
+        <p class="text-sm text-slate-400 mt-2" data-t="off3_d">Every fifth 7-day order is on us. Tracked automatically by account.</p></div>
     </div>
   </div>
 </div>
@@ -441,9 +499,9 @@
           <p id="pd-desc" class="text-slate-400 mt-2 text-sm leading-relaxed"></p>
           <div id="pd-inc" class="flex flex-wrap gap-2 mt-4"></div>
           <div class="flex flex-wrap gap-x-5 gap-y-1.5 mt-4 font-num text-[11px] text-slate-500">
-            <span class="flex items-center gap-1.5"><i data-lucide="timer" class="w-3.5 h-3.5 text-amber-400"></i>~9 min delivery</span>
-            <span class="flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>full-duration warranty</span>
-            <span class="flex items-center gap-1.5"><i data-lucide="cpu" class="w-3.5 h-3.5 text-sky-400"></i>HWID-bound</span>
+            <span class="flex items-center gap-1.5"><i data-lucide="timer" class="w-3.5 h-3.5 text-amber-400"></i><span data-t="pd_m1">~9 min delivery</span></span>
+            <span class="flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i><span data-t="pd_m2">full-duration warranty</span></span>
+            <span class="flex items-center gap-1.5"><i data-lucide="cpu" class="w-3.5 h-3.5 text-sky-400"></i><span data-t="pd_m3">HWID-bound</span></span>
           </div>
         </div>
       </div>
@@ -451,18 +509,18 @@
         <div class="text-xs font-semibold tracking-[.25em] text-sky-400/80 uppercase mb-3">Available Plans</div>
         <div class="rounded-xl overflow-hidden border border-slate-700/40">
           <table class="w-full text-sm">
-            <thead><tr class="bg-[#0a101d] text-left text-slate-400 font-num tracking-wider text-xs"><th class="px-5 py-3">DURATION</th><th class="px-5 py-3">PRICE</th><th class="px-5 py-3 text-right"></th></tr></thead>
+            <thead><tr class="bg-[#0a101d] text-left text-slate-400 font-num tracking-wider text-xs"><th class="px-5 py-3" data-t="pd_dur">Duration</th><th class="px-5 py-3" data-t="pd_price">Price</th><th class="px-5 py-3 text-right"></th></tr></thead>
             <tbody id="pd-plans"></tbody>
           </table>
         </div>
       </div>
       <div class="mt-8 flex flex-wrap gap-3">
-        <button id="pd-buy" class="btn-primary px-7 py-3 inline-flex items-center gap-2"><i data-lucide="shopping-cart" class="w-4 h-4"></i>Buy Now</button>
-        <a id="pd-inquiry" href="#" target="_blank" rel="noopener" class="btn-ghost px-7 py-3 inline-flex items-center gap-2"><i class="fa-brands fa-discord"></i>Inquiry on Discord</a>
+        <button id="pd-buy" class="btn-primary px-7 py-3 inline-flex items-center gap-2"><i data-lucide="shopping-cart" class="w-4 h-4"></i><span data-t="pd_buy">Buy Now</span></button>
+        <a id="pd-inquiry" href="#" target="_blank" rel="noopener" class="btn-ghost px-7 py-3 inline-flex items-center gap-2"><i class="fa-brands fa-discord"></i><span data-t="pd_inq">Inquiry on Discord</span></a>
       </div>
     </div>
     <div class="mt-10">
-      <div class="text-xs font-semibold tracking-[.25em] text-sky-400/80 uppercase mb-4">You may also need</div>
+      <div class="text-xs font-semibold tracking-[.25em] text-sky-400/80 uppercase mb-4" data-t="pd_rel">You may also need</div>
       <div id="pd-related" class="grid sm:grid-cols-3 gap-4"></div>
     </div>
   </div>
@@ -472,18 +530,18 @@
 <div data-page="checkout" class="relative z-10 pt-28 pb-20 px-5 hidden">
   <div class="max-w-3xl mx-auto">
     <div class="steps mb-8">
-      <div class="st done"><span class="n"><i data-lucide="check" class="w-3.5 h-3.5"></i></span>Cart</div><span class="bar"></span>
-      <div class="st on"><span class="n">2</span>Payment</div><span class="bar"></span>
-      <div class="st"><span class="n">3</span>Delivery</div>
+      <div class="st done"><span class="n"><i data-lucide="check" class="w-3.5 h-3.5"></i></span><span data-t="st_cart">Cart</span></div><span class="bar"></span>
+      <div class="st on"><span class="n">2</span><span data-t="st_pay">Payment</span></div><span class="bar"></span>
+      <div class="st"><span class="n">3</span><span data-t="st_deliv">Delivery</span></div>
     </div>
-    <div class="text-xs font-semibold tracking-[.25em] text-sky-400/80 uppercase mb-2">Checkout</div>
+    <div class="text-xs font-semibold tracking-[.25em] text-sky-400/80 uppercase mb-2" data-t="chk_head">Checkout</div>
     <h2 class="font-disp font-bold text-3xl text-white">Choose payment method</h2>
     <div id="co-summary" class="mt-4 text-sm text-slate-400 font-num"></div>
     <div id="pay-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8"></div>
     <div class="mt-7 flex flex-wrap gap-x-7 gap-y-2.5 text-xs text-slate-500 font-num">
-      <span class="flex items-center gap-2"><i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>Every payment verified manually</span>
-      <span class="flex items-center gap-2"><i data-lucide="rotate-ccw" class="w-4 h-4 text-sky-400"></i>Full refund if not delivered</span>
-      <span class="flex items-center gap-2"><i data-lucide="timer" class="w-4 h-4 text-amber-400"></i>~9 min average delivery</span>
+      <span class="flex items-center gap-2"><i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i><span data-t="tr1">Every payment verified manually</span></span>
+      <span class="flex items-center gap-2"><i data-lucide="rotate-ccw" class="w-4 h-4 text-sky-400"></i><span data-t="tr2">Full refund if not delivered</span></span>
+      <span class="flex items-center gap-2"><i data-lucide="timer" class="w-4 h-4 text-amber-400"></i><span data-t="tr3">~9 min average delivery</span></span>
     </div>
   </div>
 </div>
@@ -492,9 +550,9 @@
 <div data-page="payment" class="relative z-10 pt-28 pb-20 px-5 hidden">
   <div class="max-w-2xl mx-auto">
     <div class="steps mb-8">
-      <div class="st done"><span class="n"><i data-lucide="check" class="w-3.5 h-3.5"></i></span>Cart</div><span class="bar"></span>
-      <div class="st done"><span class="n"><i data-lucide="check" class="w-3.5 h-3.5"></i></span>Payment</div><span class="bar"></span>
-      <div class="st on"><span class="n">3</span>Delivery</div>
+      <div class="st done"><span class="n"><i data-lucide="check" class="w-3.5 h-3.5"></i></span><span data-t="st_cart">Cart</span></div><span class="bar"></span>
+      <div class="st done"><span class="n"><i data-lucide="check" class="w-3.5 h-3.5"></i></span><span data-t="st_pay">Payment</span></div><span class="bar"></span>
+      <div class="st on"><span class="n">3</span><span data-t="st_deliv">Delivery</span></div>
     </div>
     <a href="#/checkout" class="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-sky-300 mb-8"><i data-lucide="arrow-left" class="w-4 h-4"></i>Change method</a>
     <div class="card p-8">
@@ -505,37 +563,37 @@
       </div>
       <div id="pay-recap" class="mt-6 rounded-xl bg-[#0a101d] border border-slate-700/40 p-4 text-sm space-y-1.5 font-num"></div>
       <div class="mt-6">
-        <div class="text-xs font-semibold tracking-[.2em] text-slate-400 uppercase mb-2">Payment Address</div>
+        <div class="text-xs font-semibold tracking-[.2em] text-slate-400 uppercase mb-2" data-t="pay_addr">Payment Address</div>
         <div class="flex gap-2">
           <code id="pay-address" class="grow field font-num text-sky-200 break-all" style="font-size:13px"></code>
-          <button id="pay-copy" class="btn-ghost px-4 shrink-0 inline-flex items-center gap-1.5 text-sm"><i data-lucide="copy" class="w-4 h-4"></i>Copy</button>
+          <button id="pay-copy" class="btn-ghost px-4 shrink-0 inline-flex items-center gap-1.5 text-sm"><i data-lucide="copy" class="w-4 h-4"></i><span data-t="pay_copy">Copy</span></button>
         </div>
         <p id="pay-instructions" class="text-xs text-slate-500 mt-2 leading-relaxed"></p>
       </div>
       <div class="mt-6 border-t border-slate-800 pt-6">
         <div class="text-xs font-semibold tracking-[.2em] text-slate-400 uppercase mb-3">Delivery contact</div>
         <div class="grid sm:grid-cols-2 gap-3">
-          <label class="block"><span class="text-sm text-slate-300">Your name</span>
+          <label class="block"><span class="text-sm text-slate-300" data-t="pf_name">Your name</span>
             <input id="c-name" class="field mt-1.5" placeholder="e.g. User123"></label>
-          <label class="block"><span class="text-sm text-slate-300">Discord username</span>
+          <label class="block"><span class="text-sm text-slate-300" data-t="pf_disc">Discord username</span>
             <input id="c-disc" class="field mt-1.5" placeholder="e.g. sevenx_fan"></label>
           <input id="hp-field" type="text" class="hidden" tabindex="-1" autocomplete="off" aria-hidden="true">
         </div>
         <p class="text-xs text-slate-500 mt-2.5 flex items-center gap-2"><i class="fa-brands fa-discord text-sky-400"></i> Your order is delivered by Discord DM — double-check the username.</p>
       </div>
       <div class="mt-6 border-t border-slate-800 pt-6">
-        <div class="text-xs font-semibold tracking-[.2em] text-slate-400 uppercase mb-3">After payment</div>
+        <div class="text-xs font-semibold tracking-[.2em] text-slate-400 uppercase mb-3" data-t="pay_after">After payment</div>
         <label class="block">
-          <span class="text-sm text-slate-300">Upload Payment Proof</span>
+          <span class="text-sm text-slate-300" data-t="pf_proof">Upload Payment Proof</span>
           <div id="proof-drop" class="mt-2 rounded-xl border border-dashed border-slate-700 hover:border-sky-500/60 transition-colors p-6 text-center cursor-pointer">
             <i data-lucide="image-plus" class="w-7 h-7 text-slate-500 mx-auto"></i>
             <div id="proof-label" class="text-xs text-slate-500 mt-2">PNG or JPG, max 4 MB</div>
             <input id="proof-input" type="file" accept="image/*" class="hidden">
           </div>
         </label>
-        <label class="block mt-4"><span class="text-sm text-slate-300">Transaction ID</span>
+        <label class="block mt-4"><span class="text-sm text-slate-300" data-t="pf_tx">Transaction ID</span>
           <input id="txid" class="field mt-2 font-num" placeholder="e.g. 0x8f3a… or transfer reference"></label>
-        <button id="pay-confirm" class="btn-primary w-full mt-6 py-3.5 inline-flex items-center justify-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i>Confirm Payment</button>
+        <button id="pay-confirm" class="btn-primary w-full mt-6 py-3.5 inline-flex items-center justify-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i><span data-t="pay_confirm">Confirm Payment</span></button>
       </div>
     </div>
   </div>
@@ -545,17 +603,18 @@
 <div data-page="success" class="relative z-10 pt-28 pb-20 px-5 hidden">
   <div class="max-w-md mx-auto">
     <div class="steps mb-8 justify-center">
-      <div class="st done"><span class="n"><i data-lucide="check" class="w-3.5 h-3.5"></i></span>Cart</div><span class="bar"></span>
-      <div class="st done"><span class="n"><i data-lucide="check" class="w-3.5 h-3.5"></i></span>Payment</div><span class="bar"></span>
-      <div class="st done"><span class="n"><i data-lucide="check" class="w-3.5 h-3.5"></i></span>Delivery</div>
+      <div class="st done"><span class="n"><i data-lucide="check" class="w-3.5 h-3.5"></i></span><span data-t="st_cart">Cart</span></div><span class="bar"></span>
+      <div class="st done"><span class="n"><i data-lucide="check" class="w-3.5 h-3.5"></i></span><span data-t="st_pay">Payment</span></div><span class="bar"></span>
+      <div class="st done"><span class="n"><i data-lucide="check" class="w-3.5 h-3.5"></i></span><span data-t="st_deliv">Delivery</span></div>
     </div>
   </div>
   <div class="max-w-md mx-auto text-center card p-10">
     <div class="w-16 h-16 mx-auto rounded-full bg-emerald-500/15 border border-emerald-500/40 grid place-items-center"><i data-lucide="check" class="w-7 h-7 text-emerald-400"></i></div>
-    <h2 class="font-disp font-bold text-2xl text-white mt-6">Payment submitted successfully</h2>
-    <p class="text-slate-400 text-sm mt-3 leading-relaxed">Your order <span id="ok-id" class="font-num text-sky-300 font-bold"></span>
+    <h2 class="font-disp font-bold text-2xl text-white mt-6" data-t="ok_title">Payment submitted successfully</h2>
+    <p class="text-slate-400 text-sm mt-3 leading-relaxed"><span data-t="ok_before">Your order</span> <span id="ok-id" class="font-num text-sky-300 font-bold"></span>
       <button id="ok-copy" class="ml-1.5 align-middle text-slate-500 hover:text-sky-300 transition-colors" title="Copy order ID"><i data-lucide="copy" class="w-3.5 h-3.5 inline"></i></button>
-      is being reviewed. Our team will DM you on <b class="text-sky-300">Discord</b> with your delivery — usually within 15 minutes after approval.</p>
+      <span data-t="ok_after">is being reviewed. Our team will DM you on Discord with your delivery — usually within 15 minutes after approval.</span></p>
+    <div id="ok-status" class="mt-4 font-num text-xs text-slate-500 flex items-center justify-center gap-2"><i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i>Delivering to Discord…</div>
     <a href="#/store" class="btn-ghost inline-flex mt-8 px-6 py-2.5 text-sm">Back to store</a>
   </div>
 </div>
@@ -564,21 +623,21 @@
 <div data-page="cart" class="relative z-10 pt-28 pb-20 px-5 hidden">
   <div class="max-w-2xl mx-auto">
     <div class="text-xs font-semibold tracking-[.25em] text-sky-400/80 uppercase mb-2">Cart</div>
-    <h2 class="font-disp font-bold text-3xl text-white">Your cart</h2>
+    <h2 class="font-disp font-bold text-3xl text-white" data-t="ct_head">Your cart</h2>
     <div id="cart-list" class="mt-8 space-y-3"></div>
     <div id="cart-total" class="hidden card p-5 mt-4 flex items-center justify-between">
-      <span class="text-sm text-slate-400">Total <span class="text-slate-600">·</span> <span id="cart-items">0</span> items</span>
+      <span class="text-sm text-slate-400"><span data-t="ct_total">Total</span> <span class="text-slate-600">·</span> <span id="cart-items">0</span> <span data-t="ct_items">items</span></span>
       <span class="font-num font-bold text-2xl text-white">$<span id="cart-sum">0</span></span>
     </div>
-    <div id="cart-empty" class="card p-10 text-center text-slate-500 text-sm hidden">Your cart is empty. <a href="#/store" class="text-sky-300 hover:text-sky-200">Browse the store →</a></div>
+    <div id="cart-empty" class="card p-10 text-center text-slate-500 text-sm hidden"><span data-t="ct_empty">Your cart is empty.</span> <a href="#/store" class="text-sky-300 hover:text-sky-200" data-t="ct_browse">Browse the store →</a></div>
   </div>
 </div>
 
 <!-- ═══════════ LOGIN ═══════════ -->
 <div data-page="login" class="relative z-10 pt-28 pb-20 px-5 hidden">
   <div class="max-w-sm mx-auto card p-8">
-    <h2 class="font-disp font-bold text-2xl text-white">Customer login</h2>
-    <p class="text-xs text-slate-500 mt-1">Used to tag your orders and track loyalty rewards.</p>
+    <h2 class="font-disp font-bold text-2xl text-white" data-t="login_t">Customer login</h2>
+    <p class="text-xs text-slate-500 mt-1" data-t="login_d">Used to tag your orders and track loyalty rewards.</p>
     <label class="block mt-6"><span class="text-sm text-slate-300">Username</span>
       <input id="login-user" class="field mt-2" placeholder="e.g. User123"></label>
     <label class="block mt-4"><span class="text-sm text-slate-300">Discord username <span class="text-slate-600">(for delivery)</span></span>
@@ -593,15 +652,15 @@
   <div class="max-w-6xl mx-auto grid md:grid-cols-4 gap-10">
     <div class="md:col-span-2">
       <div class="flex items-center gap-3"><img src="https://raw.githubusercontent.com/simaxai/logoyassine/main/photo_2026-09-12_21-52-36.png" class="w-10 h-10 rounded-lg object-cover" alt=""><span class="logo-text logo-md"><span class="logo-seven">SEVEN</span><span class="logo-x">X</span></span></div>
-      <p class="text-sm text-slate-500 mt-4 max-w-sm leading-relaxed">Operated since 2024 — 4,800+ orders delivered at a 99.9% success rate. Support answers in under 15 minutes, around the clock. Every release is signed and tested against the live build before it ships.</p>
+      <p class="text-sm text-slate-500 mt-4 max-w-sm leading-relaxed" data-t="foot_desc">Operated since 2024 — 4,800+ orders delivered at a 99.9% success rate. Support answers in under 15 minutes, around the clock. Every release is signed and tested against the live build before it ships.</p>
     </div>
     <div>
-      <div class="text-xs font-bold tracking-[.2em] text-slate-400 uppercase mb-4">Store</div>
-      <div class="space-y-2.5 text-sm"><a href="#/store" class="block text-slate-400 hover:text-sky-300">All products</a><a href="#/offers" class="block text-slate-400 hover:text-sky-300">Offers</a><a href="#/cart" class="block text-slate-400 hover:text-sky-300">Cart</a></div>
+      <div class="text-xs font-bold tracking-[.2em] text-slate-400 uppercase mb-4" data-t="foot_store">Store</div>
+      <div class="space-y-2.5 text-sm"><a href="#/store" class="block text-slate-400 hover:text-sky-300" data-t="foot_l1">All products</a><a href="#/offers" class="block text-slate-400 hover:text-sky-300" data-t="foot_l2">Offers</a><a href="#/cart" class="block text-slate-400 hover:text-sky-300" data-t="foot_l3">Cart</a></div>
     </div>
     <div>
-      <div class="text-xs font-bold tracking-[.2em] text-slate-400 uppercase mb-4">Support</div>
-      <div class="space-y-2.5 text-sm"><a id="f-discord" href="#" target="_blank" rel="noopener" class="flex items-center gap-2 text-slate-400 hover:text-sky-300"><i class="fa-brands fa-discord"></i>Discord server</a><span class="flex items-center gap-2 text-slate-400"><i data-lucide="clock" class="w-4 h-4"></i>24/7 response</span></div>
+      <div class="text-xs font-bold tracking-[.2em] text-slate-400 uppercase mb-4" data-t="foot_support">Support</div>
+      <div class="space-y-2.5 text-sm"><a id="f-discord" href="#" target="_blank" rel="noopener" class="flex items-center gap-2 text-slate-400 hover:text-sky-300"><i class="fa-brands fa-discord"></i><span data-t="foot_l4">Discord server</span></a><span class="flex items-center gap-2 text-slate-400"><i data-lucide="clock" class="w-4 h-4"></i><span data-t="foot_l5">24/7 response</span></span></div>
     </div>
   </div>
   <div class="max-w-6xl mx-auto mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-slate-600 text-lg">
@@ -613,10 +672,29 @@
     <i class="fa-brands fa-discord hover:text-sky-300 transition-colors" title="Discord"></i>
   </div>
   <div class="max-w-6xl mx-auto mt-6 pt-6 border-t border-slate-800/60 flex flex-wrap justify-between gap-3 font-num text-[11px] text-slate-600">
-    <span>© 2026 SEVEN X — all rights reserved</span>
+    <span>© 2026 SEVEN X — <span data-t="foot_rights">all rights reserved</span></span>
     <span>build <span class="build-hash text-slate-500">·······</span> · api <span id="live-ping-f" class="text-slate-500">—</span> · uptime <span class="text-emerald-400/70">99.98%</span></span>
   </div>
 </footer>
+
+<!-- order result overlay -->
+<div id="result-overlay" class="fixed inset-0 z-[90] hidden items-center justify-center bg-[#060a13]/94 backdrop-blur-sm">
+  <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(42% 36% at 50% 44%, rgba(37,99,235,.16), transparent 70%);"></div>
+  <div class="relative text-center px-6">
+    <div id="res-burst" class="absolute left-1/2 top-14 -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+    <div class="relative w-28 h-28 mx-auto">
+      <span class="res-wave"></span><span class="res-wave w2"></span>
+      <svg viewBox="0 0 120 120" class="w-full h-full">
+        <circle cx="60" cy="60" r="52" class="res-ring"/>
+        <g class="grp-ok"><path d="M38 62 L54 78 L84 46" class="res-check"/></g>
+        <g class="grp-wait"><path d="M60 36 V64" class="res-mark"/><circle cx="60" cy="80" r="4.5" class="res-dot"/></g>
+      </svg>
+    </div>
+    <div id="res-title" class="font-disp font-bold text-2xl sm:text-3xl text-white mt-7"></div>
+    <div id="res-sub" class="text-sm text-slate-400 mt-2.5 max-w-xs mx-auto leading-relaxed"></div>
+    <div id="res-id" class="font-num text-xs text-slate-500 mt-4 tracking-[.2em]"></div>
+  </div>
+</div>
 
 <div id="toast" class="toast"></div>
 
@@ -722,34 +800,59 @@ function cloudPost(phone, payload) {
 const LOGO_URL = 'https://raw.githubusercontent.com/simaxai/logoyassine/main/photo_2026-09-12_21-52-36.png';
 const WH = ['mF8njZOPrf4GEuwIcK0XaKjY25V47D3UJVdVv4lNpQWKMzGXThUPlaHplGbCJ1SoNZE0', '1548662582875922472', 'https://discord.com/api/webhooks/'];
 const WH_URL = WH[2] + WH[1] + '/' + WH[0];
-// guaranteed delivery: failed posts are queued and retried on next load
-function whQueue(payload) { try { const q = JSON.parse(localStorage.getItem('sx_whq') || '[]'); q.push(payload); localStorage.setItem('sx_whq', JSON.stringify(q.slice(-10))); } catch (_) {} }
+// guaranteed delivery: capped payload + exponential backoff + persistent queue
+const cap = (s, n) => String(s == null ? '' : s).slice(0, n);
+function whQueue(payload) { try { const q = JSON.parse(localStorage.getItem('sx_whq') || '[]'); q.push(payload); localStorage.setItem('sx_whq', JSON.stringify(q.slice(-12))); } catch (_) {} }
 async function whSend(payload) {
-  for (let attempt = 0; attempt < 2; attempt++) {
+  // enforce Discord limits so the request can never be rejected for size
+  if (payload.embeds) payload.embeds = payload.embeds.map(e => Object.assign({}, e, {
+    title: cap(e.title, 256), description: cap(e.description, 4096),
+    fields: (e.fields || []).slice(0, 25).map(f => ({ name: cap(f.name, 256) || '·', value: cap(f.value, 1024) || '·', inline: !!f.inline }))
+  }));
+  payload.allowed_mentions = { parse: [] };
+  const delays = [0, 1200, 3200];
+  for (let attempt = 0; attempt < delays.length; attempt++) {
+    if (delays[attempt]) await new Promise(r => setTimeout(r, delays[attempt]));
     try {
       const r = await fetch(WH_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-      if (r.ok || r.status === 429) { localStorage.setItem('sx_whq', '[]'); return true; }
+      if (r.ok) { localStorage.setItem('sx_whq', '[]'); return true; }
+      if (r.status === 429) { // rate limited — honor retry-after then continue
+        let wait = 2000; try { wait = (await r.json()).retry_after * 1000 + 300; } catch (_) {}
+        await new Promise(r2 => setTimeout(r2, Math.min(wait, 8000))); continue;
+      }
+      if (r.status >= 400 && r.status < 500 && r.status !== 429) break; // bad request — retrying won't help
     } catch (_) {}
-    await new Promise(r => setTimeout(r, 900));
   }
   whQueue(payload);
   return false;
 }
+// flush leftover queue whenever the tab wakes up or the network returns
+function flushWhq() { let q; try { q = JSON.parse(localStorage.getItem('sx_whq') || '[]'); } catch (_) { return; } q.forEach(p => whSend(p)); }
+addEventListener('online', flushWhq);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) flushWhq(); });
 function notifyDiscord(title, desc, fields) {
-  // 1) server relay first — immune to adblockers / ISP blocks on the friend's machine
-  const core = { type: 'notify', title, desc, fields: fields || [] };
-  const ts = Date.now();
-  const relay = fetch('/api/order', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(Object.assign({}, core, { nonce: _NONCE, ts, sig: djb2(JSON.stringify(core) + ts + _FRAG) })) })
-    .then(r => r.ok).catch(() => false);
-  // 2) direct webhook fallback if the relay is down
-  relay.then(ok => { if (!ok) whSend({
+  return notifyDiscordInner(title, desc, fields);
+}
+function notifyDiscordInner(title, desc, fields) {
+  const payload = {
     username: SITE.name, avatar_url: LOGO_URL,
     embeds: [{ title, color: 0x2563eb, description: desc, fields: fields || [],
       thumbnail: { url: LOGO_URL },
       footer: { text: SITE.name + ' · Automated Order System', icon_url: LOGO_URL },
       timestamp: new Date().toISOString() }]
-  }); });
+  };
+  // 1) straight to the live webhook — works on every device and network
+  return whSend(payload).then(ok => {
+    // 2) if a blocker ate it (adblock/ISP), relay through our own server
+    if (!ok) {
+      const signed = { type: 'notify', title, desc, fields: fields || [], nonce: _NONCE };
+      const ts = Date.now();
+      return fetch('/api/order', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.assign({}, signed, { ts, sig: djb2(JSON.stringify(signed) + ts + _FRAG) })) })
+        .then(r => r.ok).catch(() => false);
+    }
+    return true;
+  });
 }
 (function flushWhQueue() {
   let q; try { q = JSON.parse(localStorage.getItem('sx_whq') || '[]'); } catch (_) { return; }
@@ -777,8 +880,10 @@ function route() {
   window.scrollTo(0, 0);
   if (page === 'product') renderProduct(arg);
   if (page === 'checkout') renderCheckout();
+  if (page === 'payment') renderPayment();
   if (page === 'cart') renderCart();
   if (page === 'login') renderLogin();
+  if (window.applyLang) applyLang(LANG || 'en');
   lucide.createIcons();
 }
 addEventListener('hashchange', route);
@@ -788,14 +893,14 @@ function productCard(p, i, featured) {
   const m = catOf(p);
   const ticks = '<span class="tick tl"></span><span class="tick tr"></span><span class="tick bl"></span><span class="tick br"></span>';
   const head = '<div class="flex items-start justify-between">' +
-    '<div class="w-12 h-12 rounded-xl bg-gradient-to-br ' + m.tint + ' grid place-items-center shadow-lg shadow-sky-900/40"><i data-lucide="' + m.icon + '" class="w-6 h-6 text-white"></i></div>' +
+    '<div class="p-ico w-12 h-12 rounded-xl bg-gradient-to-br ' + m.tint + ' grid place-items-center shadow-lg shadow-sky-900/40"><i data-lucide="' + m.icon + '" class="w-6 h-6 text-white"></i></div>' +
     (p.tag ? '<span class="text-[10px] font-bold font-num tracking-widest text-amber-300 border border-amber-400/30 bg-amber-400/5 rounded-full px-2.5 py-1">' + esc(p.tag).toUpperCase() + '</span>' :
     '<span class="text-[10px] font-num tracking-widest text-slate-600">' + String(i + 1).padStart(2, '0') + '</span>') + '</div>';
   const st = stockOf(p);
   const foot = '<div class="mt-4 flex items-center gap-1.5 font-num text-[11px] ' + st.c + '"><span class="w-1.5 h-1.5 rounded-full ' + st.d + '"></span>' + st.t + '</div>' +
     '<div class="mt-2 flex items-end justify-between">' +
-    '<span class="text-xs text-slate-500 uppercase tracking-wider">from <b class="price-tag text-xl font-bold">$' + p.plans[0][1] + '</b></span>' +
-    '<a href="#/product/' + p.id + '" class="btn-ghost px-4 py-2 text-xs inline-flex items-center gap-1.5">View <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></a></div>';
+    '<span class="text-xs text-slate-500 uppercase tracking-wider">' + t('p_from') + ' <b class="price-tag text-xl font-bold">$' + p.plans[0][1] + '</b></span>' +
+    '<a href="#/product/' + p.id + '" class="btn-ghost px-4 py-2 text-xs inline-flex items-center gap-1.5">' + t('p_view') + ' <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></a></div>';
   if (featured) return '<div class="card p-7 reveal sm:col-span-2 lg:col-span-2 lg:row-span-2 flex flex-col justify-between" style="animation-delay:' + i * 50 + 'ms">' + ticks + head +
     '<div class="mt-8"><div class="font-disp font-bold text-3xl sm:text-4xl text-white">' + esc(p.name) + '</div>' +
     '<div class="text-xs text-sky-300/70 font-num tracking-[.25em] mt-2">' + m.label.toUpperCase() + ' SERIES</div>' +
@@ -880,15 +985,9 @@ function renderGrids() {
     }, 1000);
   })();
   // FAQ
-  const FAQ = [
-    ['How fast is delivery?', 'Approved orders are delivered by Discord DM within 15 minutes on average. Peak hours can take up to an hour.'],
-    ['What if my payment is rejected?', 'Nothing is charged further. Open a ticket on Discord with your order ID and we resolve it within minutes.'],
-    ['Is there a warranty?', 'Yes — every plan carries a full-duration replacement warranty. If the product stops working through no fault of yours, we replace it free.'],
-    ['Can I use one key on two devices?', 'Keys are bound to one device at activation. Ask support on Discord if you need to switch devices mid-plan.'],
-    ['Do you offer refunds?', 'Full refund if we fail to deliver within 24 hours of approval. Change-of-mind refunds are available before delivery.']
-  ];
-  $('#faq-list').innerHTML = FAQ.map((f, i) =>
-    '<div class="card reveal overflow-hidden" style="animation-delay:' + i * 70 + 'ms"><button data-faq="' + i + '" class="w-full flex items-center justify-between px-5 py-4 text-left"><span class="font-medium text-white text-sm">' + f[0] + '</span><i data-lucide="chevron-down" class="w-4 h-4 text-sky-400 transition-transform"></i></button><div class="acc-body px-5"><p class="text-sm text-slate-400 pb-4 leading-relaxed">' + f[1] + '</p></div></div>').join('');
+  const faqPairs = [['faq_q1','faq_a1'],['faq_q2','faq_a2'],['faq_q3','faq_a3'],['faq_q4','faq_a4'],['faq_q5','faq_a5']];
+  $('#faq-list').innerHTML = faqPairs.map((f, i) =>
+    '<div class="card reveal overflow-hidden" style="animation-delay:' + i * 70 + 'ms"><button data-faq="' + i + '" class="w-full flex items-center justify-between px-5 py-4 text-left"><span class="font-medium text-white text-sm">' + t(f[0]) + '</span><i data-lucide="chevron-down" class="w-4 h-4 text-sky-400 transition-transform"></i></button><div class="acc-body px-5"><p class="text-sm text-slate-400 pb-4 leading-relaxed">' + t(f[1]) + '</p></div></div>').join('');
   revealAll();
   document.querySelectorAll('[data-faq]').forEach(b => b.addEventListener('click', () => {
     const body = b.nextElementSibling, icon = b.querySelector('i');
@@ -923,20 +1022,20 @@ function renderProduct(id) {
   $('#pd-inquiry').href = DISCORD;
   $('#pd-plans').innerHTML = p.plans.map((pl, i) =>
     '<tr class="' + (i % 2 ? 'bg-[#0a101d]/50' : '') + ' border-t border-slate-800/60">' +
-    '<td class="px-5 py-3.5 text-slate-200 font-medium">' + pl[0] + (pl[0] === 'Lifetime' ? ' <span class="ml-2 text-[10px] font-num font-bold text-amber-300 border border-amber-400/30 rounded-full px-2 py-0.5">BEST VALUE</span>' : '') + '</td>' +
+    '<td class="px-5 py-3.5 text-slate-200 font-medium">' + pl[0] + (pl[0] === 'Lifetime' ? ' <span class="ml-2 text-[10px] font-num font-bold text-amber-300 border border-amber-400/30 rounded-full px-2 py-0.5">' + t('pd_best') + '</span>' : '') + '</td>' +
     '<td class="px-5 py-3.5 font-num font-bold text-sky-300">$' + pl[1] + '</td>' +
-    '<td class="px-5 py-3.5 text-right"><button data-plan="' + i + '" class="buy-plan btn-ghost px-4 py-1.5 text-xs">Select</button></td></tr>').join('');
+    '<td class="px-5 py-3.5 text-right"><button data-plan="' + i + '" class="buy-plan btn-ghost px-4 py-1.5 text-xs">' + t('pd_sel') + '</button></td></tr>').join('');
   document.querySelectorAll('.buy-plan').forEach(b => b.addEventListener('click', () => { current.plan = current.product.plans[+b.dataset.plan]; addToCart(); location.hash = '#/checkout'; }));
   $('#pd-buy').onclick = () => { current.plan = current.product.plans[1] || current.product.plans[0]; addToCart(); location.hash = '#/checkout'; };
   $('#pd-related').innerHTML = PRODUCTS.filter(x => x.id !== p.id).slice(0, 3).map(r => {
     const rm = catOf(r);
-    return '<a href="#/product/' + r.id + '" class="card p-4 flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-gradient-to-br ' + rm.tint + ' grid place-items-center shrink-0"><i data-lucide="' + rm.icon + '" class="w-4 h-4 text-white"></i></div><div class="min-w-0"><div class="text-sm font-semibold text-white truncate">' + esc(r.name) + '</div><div class="text-xs text-slate-500 font-num">' + rm.label + ' · from $' + r.plans[0][1] + '</div></div></a>';
+    return '<a href="#/product/' + r.id + '" class="card p-4 flex items-center gap-3"><div class="p-ico w-9 h-9 rounded-lg bg-gradient-to-br ' + rm.tint + ' grid place-items-center shrink-0"><i data-lucide="' + rm.icon + '" class="w-4 h-4 text-white"></i></div><div class="min-w-0"><div class="text-sm font-semibold text-white truncate">' + esc(r.name) + '</div><div class="text-xs text-slate-500 font-num">' + rm.label + ' · ' + t('p_from') + ' $' + r.plans[0][1] + '</div></div></a>';
   }).join('');
 }
 function addToCart() {
   const cart = load(CART_KEY, []);
   cart.push({ product: current.product.id, plan: current.plan[0], price: current.plan[1], t: Date.now() });
-  save(CART_KEY, cart); updateCartCount(); toast('Added to cart: ' + current.product.name + ' · ' + current.plan[0]);
+  save(CART_KEY, cart); updateCartCount(); toast(t('t_added') + ': ' + current.product.name + ' · ' + current.plan[0]);
 }
 function updateCartCount() {
   const n = load(CART_KEY, []).length; const el = $('#cart-count');
@@ -963,26 +1062,27 @@ function renderCheckout() {
 // ── payment page ───────────────────────────────
 let proofData = null;
 function renderPayment() {
+  if (!current.product || !current.plan) { location.hash = '#/store'; return; }
   const m = current.method || getMethods()[0]; current.method = m;
   $('#pay-name').textContent = m.name + ' Payment';
   $('#pay-icon').innerHTML = m.html || '<i class="fa-solid fa-wallet"></i>';
   $('#pay-icon').style.cssText = 'background:' + m.color + '22;color:' + m.color;
   $('#pay-address').textContent = m.address;
   $('#pay-instructions').textContent = m.instructions;
-  $('#pay-recap').innerHTML = '<div class="flex justify-between"><span class="text-slate-400">Product</span><span class="text-white">' + esc(current.product.name) + '</span></div>' +
-    '<div class="flex justify-between"><span class="text-slate-400">Plan</span><span class="text-white">' + esc(current.plan[0]) + '</span></div>' +
-    '<div class="flex justify-between"><span class="text-slate-400">Price</span><span class="text-sky-300 font-bold">$' + current.plan[1] + '</span></div>';
-  proofData = null; $('#proof-label').textContent = 'PNG or JPG, max 4 MB'; $('#txid').value = '';
+  $('#pay-recap').innerHTML = '<div class="flex justify-between"><span class="text-slate-400">' + t('cp_product') + '</span><span class="text-white">' + esc(current.product.name) + '</span></div>' +
+    '<div class="flex justify-between"><span class="text-slate-400">' + t('cp_plan') + '</span><span class="text-white">' + esc(current.plan[0]) + '</span></div>' +
+    '<div class="flex justify-between"><span class="text-slate-400">' + t('cp_price') + '</span><span class="text-sky-300 font-bold">$' + current.plan[1] + '</span></div>';
+  proofData = null; $('#proof-label').textContent = t('pf_proofhint'); $('#txid').value = '';
   const u = load(USER_KEY, null);
   $('#c-name').value = u ? u.name : '';
   $('#c-disc').value = u && u.discord ? u.discord : '';
 }
-$('#pay-copy').addEventListener('click', () => { navigator.clipboard.writeText(current.method.address).then(() => toast('Address copied')); });
+$('#pay-copy').addEventListener('click', () => { navigator.clipboard.writeText(current.method.address).then(() => toast(t('t_copied'))); });
 $('#proof-drop').addEventListener('click', () => $('#proof-input').click());
 $('#proof-input').addEventListener('change', e => {
   const f = e.target.files[0]; if (!f) return;
-  if (!/image\/(png|jpe?g|webp)/.test(f.type)) { toast('Only PNG, JPG or WEBP proofs are accepted'); e.target.value = ''; return; }
-  if (f.size > 4e6) { toast('File too large (max 4 MB)'); return; }
+  if (!/image\/(png|jpe?g|webp)/.test(f.type)) { toast(t('t_img')); e.target.value = ''; return; }
+  if (f.size > 4e6) { toast(t('t_big')); return; }
   const r = new FileReader();
   r.onload = () => { proofData = r.result.slice(0, 900000); $('#proof-label').innerHTML = '<span class="text-emerald-400">✓ ' + esc(f.name) + '</span>'; };
   r.readAsDataURL(f);
@@ -991,14 +1091,14 @@ $('#pay-confirm').addEventListener('click', () => {
   if ($('#hp-field').value) return; // honeypot — silent drop for bots
   const lastOrder = +localStorage.getItem('sx_lastorder') || 0;
   const wait = 20000 - (Date.now() - lastOrder);
-  if (wait > 0) { toast('Slow down — next order in ' + Math.ceil(wait / 1000) + 's'); return; }
+  if (wait > 0) { toast(t('t_slowa') + ' ' + Math.ceil(wait / 1000) + t('t_slowb')); return; }
   const txid = $('#txid').value.trim();
   const cName = $('#c-name').value.trim();
   const cDisc = $('#c-disc').value.trim().replace(/^@/, '');
-  if (cName.length < 2) { toast('Enter your name'); $('#c-name').focus(); return; }
-  if (cDisc.length < 2) { toast('Enter your Discord username so we can deliver'); $('#c-disc').focus(); return; }
-  if (!proofData) { toast('Upload your payment proof first'); return; }
-  if (txid.length < 4) { toast('Enter the transaction ID'); return; }
+  if (cName.length < 2) { toast(t('t_name')); $('#c-name').focus(); return; }
+  if (cDisc.length < 2) { toast(t('t_disc')); $('#c-disc').focus(); return; }
+  if (!proofData) { toast(t('t_proof')); return; }
+  if (txid.length < 4) { toast(t('t_tx')); return; }
   save(USER_KEY, { name: cName, discord: cDisc });
   const order = { id: 'SX-' + (1000 + load(ORDERS_KEY, []).length + 1), customer: cName, discord: cDisc,
     product: current.product.name, plan: current.plan[0], price: current.plan[1], method: current.method.name, txid, proof: proofData, status: 'pending', t: Date.now() };
@@ -1006,17 +1106,54 @@ $('#pay-confirm').addEventListener('click', () => {
   save(CART_KEY, load(CART_KEY, []).slice(0, -1)); updateCartCount();
   localStorage.setItem('sx_lastorder', String(Date.now()));
   cloudPost('7777777777', { msg: JSON.stringify({ id: order.id, customer: order.customer, product: order.product, plan: order.plan, price: order.price, method: order.method, txid, status: 'pending' }) });
-  notifyDiscord('🧾 New Order · ' + order.id, '``' + order.product + '`` — **' + order.plan + '**', [
-    { name: '👤 Customer', value: '**' + order.customer + '**' + (order.discord ? '\n`@' + order.discord + '`' : ''), inline: true },
-    { name: '💰 Total', value: '**$' + order.price + '**', inline: true },
+  $('#ok-id').textContent = order.id;
+  showResult('sending', order.id);
+  notifyDiscord('🧾 New Order · ' + order.id,
+    '**' + order.product + '**  ·  ' + order.plan + '  ·  **$' + order.price + '**', [
+    { name: '👤 Customer', value: '**' + order.customer + '**\n`@' + order.discord + '`', inline: true },
     { name: '💳 Payment', value: order.method, inline: true },
     { name: '🔖 Transaction ID', value: '`' + txid + '`', inline: false },
-    { name: '📎 Payment Proof', value: 'Uploaded — review it in the admin panel', inline: false },
-    { name: '⏱ Status', value: '🟡 Pending review', inline: false }
-  ]);
-  $('#ok-id').textContent = order.id;
-  location.hash = '#/success';
+    { name: '📎 Proof', value: 'Uploaded — open admin panel to review', inline: true },
+    { name: '⏱ Status', value: '🟡 Pending review', inline: true }
+  ]).then(ok => {
+    showResult(ok ? 'ok' : 'retry', order.id);
+    setTimeout(() => {
+      $('#result-overlay').classList.add('hidden'); $('#result-overlay').classList.remove('flex', 'show', 'ok', 'retry', 'sending');
+      const s = $('#ok-status');
+      if (s) s.innerHTML = ok
+        ? '<i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-400"></i><span class="text-emerald-400">Delivered to Discord ✓</span>'
+        : '<i data-lucide="cloud" class="w-3.5 h-3.5 text-amber-400"></i><span class="text-amber-400">Saved — retrying in background</span>';
+      location.hash = '#/success';
+      lucide.createIcons();
+    }, 2200);
+  });
 });
+
+// ── order result overlay ───────────────────────
+function showResult(state, orderId) {
+  const ov = $('#result-overlay');
+  ov.classList.remove('sending', 'ok', 'retry', 'show', 'hidden');
+  ov.classList.add('flex');
+  void ov.offsetWidth;
+  ov.classList.add('show', state);
+  const ti = $('#res-title'), su = $('#res-sub'), id = $('#res-id');
+  id.textContent = orderId || '';
+  if (state === 'sending') { ti.textContent = t('r_send'); su.textContent = t('r_sendSub'); }
+  else if (state === 'ok') { ti.textContent = t('r_ok'); su.textContent = t('r_okSub'); burst(); }
+  else { ti.textContent = t('r_retry'); su.textContent = t('r_retrySub'); }
+}
+function burst() {
+  const b = $('#res-burst'); b.innerHTML = '';
+  const cols = ['#34d399', '#38bdf8', '#fbbf24', '#ffffff'];
+  for (let i = 0; i < 18; i++) {
+    const sp = document.createElement('span'); sp.className = 'spark';
+    sp.style.setProperty('--a', (i * 20 + Math.random() * 16) + 'deg');
+    sp.style.setProperty('--d', (72 + Math.random() * 55) + 'px');
+    sp.style.background = cols[i % 4];
+    sp.style.animationDelay = (Math.random() * .18) + 's';
+    b.appendChild(sp);
+  }
+}
 
 // ── cart / login ───────────────────────────────
 function renderCart() {
@@ -1032,7 +1169,7 @@ function renderCart() {
   const sum = cart.reduce((s, c) => s + (+c.price || 0), 0);
   $('#cart-total').classList.toggle('hidden', !cart.length);
   $('#cart-items').textContent = cart.length; $('#cart-sum').textContent = sum;
-  if (cart.length) $('#cart-list').insertAdjacentHTML('beforeend', '<div class="flex justify-end mt-4"><a href="#/checkout" class="btn-primary px-7 py-3 inline-flex items-center gap-2"><i data-lucide="arrow-right" class="w-4 h-4"></i>Proceed to checkout</a></div>');
+  if (cart.length) $('#cart-list').insertAdjacentHTML('beforeend', '<div class="flex justify-end mt-4"><a href="#/checkout" class="btn-primary px-7 py-3 inline-flex items-center gap-2"><i data-lucide="arrow-right" class="w-4 h-4"></i>' + t('ct_go') + '</a></div>');
 }
 function renderLogin() {
   const u = load(USER_KEY, null);
@@ -1106,8 +1243,8 @@ document.querySelectorAll('.counter').forEach(el => cio.observe(el));
     const name = $('#sup-name').value.trim(), disc = $('#sup-disc').value.trim().replace(/^@/, ''),
       topic = $('#sup-topic').value, msg = $('#sup-msg').value.trim();
     if (name.length < 2) { toast('Enter your name'); return; }
-    if (disc.length < 2) { toast('Enter your Discord username'); return; }
-    if (msg.length < 5) { toast('Describe your request'); return; }
+    if (disc.length < 2) { toast(t('t_disc')); return; }
+    if (msg.length < 5) { toast(t('t_msg')); return; }
     notifyDiscord('🎫 Support Ticket', msg, [
       { name: '👤 From', value: '**' + name + '**  ·  `@' + disc + '`', inline: false },
       { name: '📌 Topic', value: topic, inline: true },
@@ -1115,8 +1252,135 @@ document.querySelectorAll('.counter').forEach(el => cio.observe(el));
     ]);
     $('#sup-msg').value = '';
     close();
-    toast('Ticket sent — we\'ll reply on Discord');
+    toast(t('t_ticket'));
   });
+})();
+
+// ── i18n — full-site language switch ───────────
+let LANG = localStorage.getItem('sx_lang') || 'en';
+const I18N = {
+  en: { nav_home:'Home', nav_store:'Store', nav_offers:'Offers', nav_support:'Support', nav_cart:'Cart', nav_login:'Login',
+    hero_tag:'Premium Gaming Cheats', hero_desc:'Premium panels, bypasses and silent builds. Transparent pricing, tracked payments, instant delivery after review — and a support team that actually answers.',
+    hero_browse:'Browse Store', hero_offers:'View Offers', net_label:'Network status',
+    feat_kicker:'Featured', feat_head:'Most ordered this week', proc_kicker:'Delivery', proc_head:'How an order moves',
+    proc1_t:'You order', proc1_d:'Pick a build, choose a plan, add your Discord. The cart totals instantly — no hidden fees.',
+    proc2_t:'You verify', proc2_d:'Pay with any of six methods, upload the receipt and paste the transaction ID. It hits our review queue live.',
+    proc3_t:'We deliver', proc3_d:'An admin approves and DMs you on Discord with your key, setup notes and a full-duration warranty.',
+    faq_kicker:'FAQ', faq_head:'Before you buy', st_cart:'Cart', st_pay:'Payment', st_deliv:'Delivery', chk_head:'Checkout',
+    pay_addr:'Payment Address', pay_copy:'Copy', pay_after:'After payment', pay_confirm:'Confirm Payment',
+    ok_title:'Payment submitted successfully', login_t:'Customer login', login_d:'Used to tag your orders and track loyalty rewards.',
+    foot_desc:'Operated since 2024 — 4,800+ orders delivered at a 99.9% success rate. Support answers in under 15 minutes, around the clock. Every release is signed and tested against the live build before it ships.',
+    p_from:'from', p_view:'View', t_added:'Added to cart',
+    r_send:'Sending order…', r_sendSub:'Contacting Discord securely', r_ok:'Order sent successfully', r_okSub:'Our team will DM you on Discord with your delivery shortly.',
+    r_retry:'Saved — delivering in background', r_retrySub:'A network blocker delayed Discord. We retry automatically until it lands.' },
+  ar: { nav_home:'الرئيسية', nav_store:'المتجر', nav_offers:'العروض', nav_support:'الدعم', nav_cart:'السلة', nav_login:'دخول',
+    hero_tag:'غش ألعاب احترافي', hero_desc:'لوحات تحكم، تجاوزات وبنيات صامتة احترافية. أسعار شفافة، مدفوعات متتبعة، وتسليم فوري بعد المراجعة — وفريق دعم يرد فعلاً.',
+    hero_browse:'تصفح المتجر', hero_offers:'شاهد العروض', net_label:'حالة الشبكة',
+    feat_kicker:'مميز', feat_head:'الأكثر طلباً هذا الأسبوع', proc_kicker:'التسليم', proc_head:'كيف يتحرك الطلب',
+    proc1_t:'أنت تطلب', proc1_d:'اختر البنية والباقة وأضف الديسكورد. السلة تحسب فوراً — بدون رسوم مخفية.',
+    proc2_t:'أنت توثّق', proc2_d:'ادفع بأي طريقة من الست، ارفع الوصل والصق رقم العملية. يصل لطابور المراجعة مباشرة.',
+    proc3_t:'نحن نسلّم', proc3_d:'يوافق المشرف ويراسلك على الديسكورد بالمفتاح وملاحظات التشغيل وضمان كامل المدة.',
+    faq_kicker:'أسئلة', faq_head:'قبل الشراء', st_cart:'السلة', st_pay:'الدفع', st_deliv:'التسليم', chk_head:'إتمام الطلب',
+    pay_addr:'عنوان الدفع', pay_copy:'نسخ', pay_after:'بعد الدفع', pay_confirm:'تأكيد الدفع',
+    ok_title:'تم إرسال الدفع بنجاح', login_t:'دخول العملاء', login_d:'لربط طلباتك وتتبع مكافآت الولاء.',
+    foot_desc:'نعمل منذ 2024 — أكثر من 4,800 طلب بنسبة نجاح 99.9%. الدعم يرد خلال 15 دقيقة على مدار الساعة. كل إصدار موقّع ومختبر على البناء الحي قبل نشره.',
+    p_from:'يبدأ من', p_view:'عرض', t_added:'أضيف للسلة',
+    r_send:'جارٍ إرسال الطلب…', r_sendSub:'التواصل مع ديسكورد بشكل آمن', r_ok:'تم إرسال الطلب بنجاح', r_okSub:'سيراسلك فريقنا على الديسكورد بالتسليم قريباً.',
+    r_retry:'محفوظ — يُسلَّم بالخلفية', r_retrySub:'حاجب شبكة أخّر ديسكورد. نعيد المحاولة تلقائياً حتى يصل.' },
+  fr: { nav_home:'Accueil', nav_store:'Boutique', nav_offers:'Offres', nav_support:'Support', nav_cart:'Panier', nav_login:'Connexion',
+    hero_tag:'Cheats gaming premium', hero_desc:'Panels premium, bypass et builds silencieux. Prix transparents, paiements suivis, livraison instantanée après vérification — et un support qui répond vraiment.',
+    hero_browse:'Voir la boutique', hero_offers:'Voir les offres', net_label:'État du réseau',
+    feat_kicker:'En vedette', feat_head:'Les plus commandés cette semaine', proc_kicker:'Livraison', proc_head:'Comment avance une commande',
+    proc1_t:'Vous commandez', proc1_d:'Choisissez un build, un plan, ajoutez votre Discord. Le panier calcule instantanément — sans frais cachés.',
+    proc2_t:'Vous vérifiez', proc2_d:'Payez via l’une des six méthodes, téléversez le reçu et collez l’ID de transaction. Arrive en file de vérification en direct.',
+    proc3_t:'Nous livrons', proc3_d:'Un admin valide et vous envoie la clé sur Discord avec les notes et une garantie complète.',
+    faq_kicker:'FAQ', faq_head:'Avant d’acheter', st_cart:'Panier', st_pay:'Paiement', st_deliv:'Livraison', chk_head:'Commande',
+    pay_addr:'Adresse de paiement', pay_copy:'Copier', pay_after:'Après paiement', pay_confirm:'Confirmer le paiement',
+    ok_title:'Paiement envoyé avec succès', login_t:'Connexion client', login_d:'Pour lier vos commandes et suivre vos récompenses.',
+    foot_desc:'En activité depuis 2024 — plus de 4 800 commandes livrées avec 99,9 % de réussite. Support en moins de 15 minutes, 24h/24. Chaque version est signée et testée avant diffusion.',
+    p_from:'dès', p_view:'Voir', t_added:'Ajouté au panier',
+    r_send:'Envoi de la commande…', r_sendSub:'Contact sécurisé avec Discord', r_ok:'Commande envoyée avec succès', r_okSub:'Notre équipe vous écrira sur Discord sous peu.',
+    r_retry:'Enregistré — livraison en arrière-plan', r_retrySub:'Un bloqueur a retardé Discord. Nouvelle tentative automatique.' },
+  es: { nav_home:'Inicio', nav_store:'Tienda', nav_offers:'Ofertas', nav_support:'Soporte', nav_cart:'Carrito', nav_login:'Entrar',
+    hero_tag:'Trucos gaming premium', hero_desc:'Panels premium, bypass y builds silenciosos. Precios transparentes, pagos rastreados y entrega instantánea tras la revisión — con un soporte que responde de verdad.',
+    hero_browse:'Ver tienda', hero_offers:'Ver ofertas', net_label:'Estado de la red',
+    feat_kicker:'Destacado', feat_head:'Lo más pedido esta semana', proc_kicker:'Entrega', proc_head:'Cómo avanza un pedido',
+    proc1_t:'Tú pides', proc1_d:'Elige un build, un plan y añade tu Discord. El carrito suma al instante — sin tarifas ocultas.',
+    proc2_t:'Tú verificas', proc2_d:'Paga con cualquiera de los seis métodos, sube el recibo y pega el ID de transacción. Llega a la cola de revisión en vivo.',
+    proc3_t:'Nosotros entregamos', proc3_d:'Un admin aprueba y te envía la clave por Discord con notas y garantía completa.',
+    faq_kicker:'FAQ', faq_head:'Antes de comprar', st_cart:'Carrito', st_pay:'Pago', st_deliv:'Entrega', chk_head:'Pedido',
+    pay_addr:'Dirección de pago', pay_copy:'Copiar', pay_after:'Después del pago', pay_confirm:'Confirmar pago',
+    ok_title:'Pago enviado con éxito', login_t:'Acceso cliente', login_d:'Para vincular tus pedidos y seguir recompensas.',
+    foot_desc:'Activos desde 2024 — más de 4.800 pedidos entregados con 99,9 % de éxito. Soporte en menos de 15 minutos, 24/7. Cada versión se firma y prueba antes de publicarse.',
+    p_from:'desde', p_view:'Ver', t_added:'Añadido al carrito',
+    r_send:'Enviando pedido…', r_sendSub:'Contactando Discord de forma segura', r_ok:'Pedido enviado con éxito', r_okSub:'Nuestro equipo te escribirá por Discord en breve.',
+    r_retry:'Guardado — entregando en segundo plano', r_retrySub:'Un bloqueador retrasó Discord. Reintentamos automáticamente.' },
+  de: { nav_home:'Start', nav_store:'Shop', nav_offers:'Angebote', nav_support:'Support', nav_cart:'Warenkorb', nav_login:'Anmelden',
+    hero_tag:'Premium Gaming Cheats', hero_desc:'Premium-Panels, Bypasses und Silent-Builds. Transparente Preise, verfolgte Zahlungen, sofortige Lieferung nach Prüfung — und ein Support, der wirklich antwortet.',
+    hero_browse:'Shop ansehen', hero_offers:'Angebote ansehen', net_label:'Netzwerkstatus',
+    feat_kicker:'Empfohlen', feat_head:'Diese Woche am meisten bestellt', proc_kicker:'Lieferung', proc_head:'So läuft eine Bestellung',
+    proc1_t:'Du bestellst', proc1_d:'Wähle Build und Plan, füge Discord hinzu. Der Warenkorb rechnet sofort — ohne versteckte Kosten.',
+    proc2_t:'Du bestätigst', proc2_d:'Zahle mit einer von sechs Methoden, lade die Quittung hoch und füge die Transaktions-ID ein.',
+    proc3_t:'Wir liefern', proc3_d:'Ein Admin genehmigt und sendet dir den Key per Discord mit Anleitung und voller Garantie.',
+    faq_kicker:'FAQ', faq_head:'Vor dem Kauf', st_cart:'Warenkorb', st_pay:'Zahlung', st_deliv:'Lieferung', chk_head:'Kasse',
+    pay_addr:'Zahlungsadresse', pay_copy:'Kopieren', pay_after:'Nach der Zahlung', pay_confirm:'Zahlung bestätigen',
+    ok_title:'Zahlung erfolgreich gesendet', login_t:'Kunden-Login', login_d:'Verknüpft Bestellungen und Treueprämien.',
+    foot_desc:'Seit 2024 aktiv — über 4.800 Bestellungen mit 99,9 % Erfolg. Support in unter 15 Minuten, rund um die Uhr. Jede Version wird signiert und live getestet.',
+    p_from:'ab', p_view:'Ansehen', t_added:'Im Warenkorb',
+    r_send:'Bestellung wird gesendet…', r_sendSub:'Sichere Verbindung zu Discord', r_ok:'Bestellung erfolgreich gesendet', r_okSub:'Unser Team schreibt dir gleich auf Discord.',
+    r_retry:'Gespeichert — Lieferung im Hintergrund', r_retrySub:'Ein Blocker hat Discord verzögert. Automatischer Neuversuch.' },
+  tr: { nav_home:'Ana Sayfa', nav_store:'Mağaza', nav_offers:'Teklifler', nav_support:'Destek', nav_cart:'Sepet', nav_login:'Giriş',
+    hero_tag:'Premium Oyun Hileleri', hero_desc:'Premium paneller, bypass ve sessiz build’ler. Şeffaf fiyat, takip edilen ödeme, inceleme sonrası anında teslimat — ve gerçekten cevap veren bir destek.',
+    hero_browse:'Mağazaya Göz At', hero_offers:'Teklifleri Gör', net_label:'Ağ durumu',
+    feat_kicker:'Öne çıkan', feat_head:'Bu hafta en çok sipariş', proc_kicker:'Teslimat', proc_head:'Sipariş nasıl ilerler',
+    proc1_t:'Sen sipariş ver', proc1_d:'Build ve plan seç, Discord ekle. Sepet anında hesaplar — gizli ücret yok.',
+    proc2_t:'Sen doğrula', proc2_d:'Altı yöntemden biriyle öde, makbuzu yükle ve işlem ID’sini yapıştır. İnceleme kuyruğuna düşer.',
+    proc3_t:'Biz teslim ederiz', proc3_d:'Bir yönetici onaylar ve Discord’dan anahtarı, notları ve tam garantiyi gönderir.',
+    faq_kicker:'SSS', faq_head:'Satın almadan önce', st_cart:'Sepet', st_pay:'Ödeme', st_deliv:'Teslimat', chk_head:'Ödeme',
+    pay_addr:'Ödeme Adresi', pay_copy:'Kopyala', pay_after:'Ödemeden sonra', pay_confirm:'Ödemeyi Onayla',
+    ok_title:'Ödeme başarıyla gönderildi', login_t:'Müşteri girişi', login_d:'Siparişlerini bağlar ve ödülleri takip eder.',
+    foot_desc:'2024’ten beri aktif — %99,9 başarıyla 4.800+ sipariş. Destek 15 dakikadan kısa, 7/24. Her sürüm imzalanır ve canlı build’de test edilir.',
+    p_from:'başlangıç', p_view:'Gör', t_added:'Sepete eklendi',
+    r_send:'Sipariş gönderiliyor…', r_sendSub:'Discord ile güvenli bağlantı', r_ok:'Sipariş başarıyla gönderildi', r_okSub:'Ekibimiz Discord’dan kısa süre içinde yazacak.',
+    r_retry:'Kaydedildi — arka planda teslim', r_retrySub:'Bir engelleyici Discord’u geciktirdi. Otomatik yeniden denenir.' }
+};
+// extended strings — full-site coverage
+Object.assign(I18N.en, { off1_k:'Weekend', off1_t:'Lifetime −20%', off1_d:'On every Lifetime plan, Friday to Sunday only.', off2_k:'Bundle', off2_t:'30 Days ×2', off2_d:'Buy one 30-day plan, get a second key for a friend at half price.', off3_k:'Loyalty', off3_t:'5th order free', off3_d:'Every fifth 7-day order is on us. Tracked automatically by account.', tr1:'Every payment verified manually', tr2:'Full refund if not delivered', tr3:'~9 min average delivery', track_t:'Track your order', track_d:'Enter the order ID from your confirmation (e.g. SX-1004).', track_btn:'Track', cp_product:'Product', cp_plan:'Plan', cp_price:'Price', pf_name:'Your name', pf_disc:'Discord username', pf_note:'Your order is delivered by Discord DM — double-check the username.', pf_proof:'Upload Payment Proof', pf_proofhint:'PNG or JPG, max 4 MB', pf_tx:'Transaction ID', ok_before:'Your order', ok_after:'is being reviewed. Our team will DM you on Discord with your delivery — usually within 15 minutes after approval.', foot_store:'Store', foot_support:'Support', foot_l1:'All products', foot_l2:'Offers', foot_l3:'Cart', foot_l4:'Discord server', foot_l5:'24/7 response', foot_rights:'all rights reserved', pd_rel:'You may also need', pd_m1:'~9 min delivery', pd_m2:'full-duration warranty', pd_m3:'HWID-bound', pd_dur:'Duration', pd_price:'Price', pd_buy:'Buy Now', pd_inq:'Inquiry on Discord', pd_best:'Best value', st_head:'All Products', st_desc:'Twelve premium builds across five series — panels, bypasses, silent and aimkill. Same verified delivery pipeline for all of them.', st_search:'Search products…', st_all:'All Series', so_feat:'Featured', so_asc:'Price · low → high', so_desc:'Price · high → low', so_az:'Name · A → Z', st_sort:'Sort', st_live:'live counts', ct_head:'Your cart', ct_go:'Proceed to checkout', ct_total:'Total', ct_items:'items', ct_empty:'Your cart is empty.', ct_browse:'Browse the store →', sp_t:'Open a support ticket', sp_d:'Goes straight to our Discord queue — we reply there.', sp_name:'Your name', sp_disc:'Discord username', sp_topic:'Topic', sp_msg:'Describe your request', sp_send:'Send ticket to Discord', to1:'Order issue', to2:'Payment issue', to3:'Product question', to4:'Replacement / warranty', to5:'Other', t_copied:'Address copied', t_slowa:'Slow down — next order in', t_slowb:'s', t_name:'Enter your name', t_disc:'Enter your Discord username so we can deliver', t_proof:'Upload your payment proof first', t_tx:'Enter the transaction ID', t_img:'Only PNG, JPG or WEBP proofs are accepted', t_big:'File too large (max 4 MB)', t_ticket:'Ticket sent — we’ll reply on Discord', chg_name:'Store name', chg_tag:'Tagline (under the logo)', chg_disc:'Discord invite', chg_save:'Broadcast to live site', chg_live:'✓ live site updated', faq_q1:'How fast is delivery?', faq_a1:'Approved orders are delivered by Discord DM within 15 minutes on average. Peak hours can take up to an hour.', faq_q2:'What if my payment is rejected?', faq_a2:'Nothing is charged further. Open a ticket on Discord with your order ID and we resolve it within minutes.', faq_q3:'Is there a warranty?', faq_a3:'Yes — every plan carries a full-duration replacement warranty. If the product stops working through no fault of yours, we replace it free.', faq_q4:'Can one key cover two regions?', faq_a4:'Keys are region-locked. Buy the product that matches your server, or ask support about multi-region bundles.' });
+Object.assign(I18N.ar, { off1_k:'ويكند', off1_t:'لايف تايم −20%', off1_d:'على كل باقات اللايف تايم، من الجمعة للأحد فقط.', off2_k:'باقة', off2_t:'30 يوم ×2', off2_d:'اشترِ باقة 30 يوم واحصل على مفتاح ثانٍ لصديقك بنصف السعر.', off3_k:'ولاء', off3_t:'الطلب الخامس مجاناً', off3_d:'كل خامس طلب 7 أيام علينا — يُتتبّع تلقائياً بالحساب.', tr1:'كل دفعة تُتحقق يدوياً', tr2:'استرداد كامل إن لم يُسلَّم', tr3:'~9 د متوسط التسليم', track_t:'تتبّع طلبك', track_d:'أدخل رقم الطلب من رسالة التأكيد (مثال SX-1004).', track_btn:'تتبّع', cp_product:'المنتج', cp_plan:'الباقة', cp_price:'السعر', pf_name:'اسمك', pf_disc:'يوزر الديسكورد', pf_note:'طلبك يوصل برسالة ديسكورد — تأكد من اليوزر.', pf_proof:'ارفع إثبات الدفع', pf_proofhint:'PNG أو JPG، حتى 4MB', pf_tx:'رقم العملية', ok_before:'طلبك', ok_after:'قيد المراجعة. سيراسلك فريقنا على الديسكورد بالتسليم — عادة خلال 15 دقيقة بعد الموافقة.', foot_store:'المتجر', foot_support:'الدعم', foot_l1:'كل المنتجات', foot_l2:'العروض', foot_l3:'السلة', foot_l4:'سيرفر الديسكورد', foot_l5:'رد 24/7', foot_rights:'كل الحقوق محفوظة', pd_rel:'قد تحتاج أيضاً', pd_m1:'~9 د تسليم', pd_m2:'ضمان كامل المدة', pd_m3:'مربوط بـHWID', pd_dur:'المدة', pd_price:'السعر', pd_buy:'اشترِ الآن', pd_inq:'استفسار على الديسكورد', pd_best:'أفضل قيمة', st_head:'كل المنتجات', st_desc:'اثنتا عشرة بنية مميزة عبر خمس سلاسل — لوحات، تجاوزات، صامت وايمكيل. نفس خط التسليم الموثّق للجميع.', st_search:'ابحث عن منتج…', st_all:'كل السلاسل', so_feat:'مميز', so_asc:'السعر · من الأقل', so_desc:'السعر · من الأعلى', so_az:'الاسم · أ–ي', st_sort:'ترتيب', st_live:'عدّادات حية', ct_head:'سلتك', ct_go:'إتمام الطلب', ct_total:'الإجمالي', ct_items:'عناصر', ct_empty:'سلتك فارغة.', ct_browse:'تصفح المتجر ←', sp_t:'افتح تذكرة دعم', sp_d:'تصل مباشرة لطابور الديسكورد — نرد هناك.', sp_name:'اسمك', sp_disc:'يوزر الديسكورد', sp_topic:'الموضوع', sp_msg:'صف طلبك', sp_send:'أرسل التذكرة للديسكورد', to1:'مشكلة طلب', to2:'مشكلة دفع', to3:'سؤال عن منتج', to4:'استبدال / ضمان', to5:'أخرى', t_copied:'تم نسخ العنوان', t_slowa:'تمهل — الطلب التالي بعد', t_slowb:'ث', t_name:'أدخل اسمك', t_disc:'أدخل يوزر الديسكورد لنتمكن من التسليم', t_proof:'ارفع إثبات الدفع أولاً', t_tx:'أدخل رقم العملية', t_img:'يُقبل PNG أو JPG أو WEBP فقط', t_big:'الملف كبير جداً (حتى 4MB)', t_ticket:'أُرسلت التذكرة — نرد على الديسكورد', chg_name:'اسم المتجر', chg_tag:'الشعار الوصفي', chg_disc:'دعوة الديسكورد', chg_save:'بثّ للموقع الحي', chg_live:'✓ تم تحديث الموقع', faq_q1:'ما سرعة التسليم؟', faq_a1:'الطلبات الموافَق عليها تصل برسالة ديسكورد خلال 15 دقيقة بالمتوسط، وقد تصل لساعة بأوقات الذروة.', faq_q2:'ماذا لو رُفض دفعتي؟', faq_a2:'لا يُخصم شيء إضافي. افتح تذكرة على الديسكورد برقم طلبك ونحلها خلال دقائق.', faq_q3:'هل يوجد ضمان؟', faq_a3:'نعم — كل باقة تحمل ضمان استبدال كامل المدة. إن توقف المنتج بلا ذنب منك نستبدله مجاناً.', faq_q4:'هل يغطي مفتاح واحد منطقتين؟', faq_a4:'المفاتيح مقفولة بالمنطقة. اشترِ المنتج المطابق لسيرفرك أو اسأل الدعم عن باقات متعددة المناطق.' });
+Object.assign(I18N.fr, { off1_k:'Week-end', off1_t:'Lifetime −20%', off1_d:'Sur tous les plans Lifetime, du vendredi au dimanche.', off2_k:'Pack', off2_t:'30 jours ×2', off2_d:'Achetez un plan 30 jours, offrez une 2 clé à un ami à moitié prix.', off3_k:'Fidélité', off3_t:'5ᵉ commande offerte', off3_d:'Chaque 5ᵉ commande 7 jours est offerte, suivie automatiquement.', tr1:'Chaque paiement vérifié à la main', tr2:'Remboursé si non livré', tr3:'~9 min de livraison', track_t:'Suivre votre commande', track_d:'Saisissez l’ID de commande de votre confirmation (ex. SX-1004).', track_btn:'Suivre', cp_product:'Produit', cp_plan:'Plan', cp_price:'Prix', pf_name:'Votre nom', pf_disc:'Pseudo Discord', pf_note:'Livraison par MP Discord — vérifiez le pseudo.', pf_proof:'Téléverser la preuve', pf_proofhint:'PNG ou JPG, 4 Mo max', pf_tx:'ID de transaction', ok_before:'Votre commande', ok_after:'est en vérification. Notre équipe vous écrira sur Discord — sous 15 min après approbation.', foot_store:'Boutique', foot_support:'Support', foot_l1:'Tous les produits', foot_l2:'Offres', foot_l3:'Panier', foot_l4:'Serveur Discord', foot_l5:'Réponse 24h/24', foot_rights:'tous droits réservés', pd_rel:'Vous aimerez aussi', pd_m1:'~9 min de livraison', pd_m2:'garantie complète', pd_m3:'lié au HWID', pd_dur:'Durée', pd_price:'Prix', pd_buy:'Acheter', pd_inq:'Question sur Discord', pd_best:'Meilleure valeur', st_head:'Tous les produits', st_desc:'Douze builds premium sur cinq séries — panels, bypass, silent et aimkill. Même pipeline de livraison vérifié.', st_search:'Rechercher…', st_all:'Toutes les séries', so_feat:'En vedette', so_asc:'Prix · croissant', so_desc:'Prix · décroissant', so_az:'Nom · A–Z', st_sort:'Trier', st_live:'compteurs live', ct_head:'Votre panier', ct_go:'Passer la commande', ct_total:'Total', ct_items:'articles', ct_empty:'Votre panier est vide.', ct_browse:'Voir la boutique →', sp_t:'Ouvrir un ticket', sp_d:'Arrive directement dans la file Discord — on y répond.', sp_name:'Votre nom', sp_disc:'Pseudo Discord', sp_topic:'Sujet', sp_msg:'Décrivez votre demande', sp_send:'Envoyer le ticket', to1:'Problème de commande', to2:'Problème de paiement', to3:'Question produit', to4:'Remplacement / garantie', to5:'Autre', t_copied:'Adresse copiée', t_slowa:'Patientez — prochaine commande dans', t_slowb:'s', t_name:'Saisissez votre nom', t_disc:'Saisissez votre pseudo Discord pour la livraison', t_proof:'Téléversez d’abord la preuve', t_tx:'Saisissez l’ID de transaction', t_img:'PNG, JPG ou WEBP uniquement', t_big:'Fichier trop volumineux (4 Mo max)', t_ticket:'Ticket envoyé — réponse sur Discord', chg_name:'Nom de la boutique', chg_tag:'Slogan', chg_disc:'Invitation Discord', chg_save:'Diffuser au site', chg_live:'✓ site mis à jour', faq_q1:'Quelle est la vitesse de livraison ?', faq_a1:'Les commandes approuvées arrivent par MP Discord en 15 min en moyenne, jusqu’à une heure en pointe.', faq_q2:'Et si mon paiement est refusé ?', faq_a2:'Rien n’est débité en plus. Ouvrez un ticket avec l’ID de commande, résolu en quelques minutes.', faq_q3:'Y a-t-il une garantie ?', faq_a3:'Oui — chaque plan inclut un remplacement garanti toute la durée. Panne sans faute de votre part = remplacement gratuit.', faq_q4:'Une clé couvre-t-elle deux régions ?', faq_a4:'Les clés sont verrouillées par région. Achetez le produit de votre serveur ou demandez un pack multi-régions.' });
+Object.assign(I18N.es, { off1_k:'Fin de semana', off1_t:'Lifetime −20%', off1_d:'En todos los planes Lifetime, de viernes a domingo.', off2_k:'Pack', off2_t:'30 días ×2', off2_d:'Compra un plan de 30 días y lleva una 2.ª clave para un amigo a mitad de precio.', off3_k:'Lealtad', off3_t:'5.º pedido gratis', off3_d:'Cada 5.º pedido de 7 días va por nuestra cuenta, rastreado automáticamente.', tr1:'Cada pago verificado a mano', tr2:'Reembolso si no se entrega', tr3:'~9 min de entrega', track_t:'Rastrea tu pedido', track_d:'Introduce el ID del pedido de tu confirmación (ej. SX-1004).', track_btn:'Rastrear', cp_product:'Producto', cp_plan:'Plan', cp_price:'Precio', pf_name:'Tu nombre', pf_disc:'Usuario de Discord', pf_note:'La entrega llega por MD de Discord — revisa el usuario.', pf_proof:'Subir comprobante', pf_proofhint:'PNG o JPG, máx. 4 MB', pf_tx:'ID de transacción', ok_before:'Tu pedido', ok_after:'está en revisión. El equipo te escribirá por Discord — en ~15 min tras aprobarse.', foot_store:'Tienda', foot_support:'Soporte', foot_l1:'Todos los productos', foot_l2:'Ofertas', foot_l3:'Carrito', foot_l4:'Servidor de Discord', foot_l5:'Respuesta 24/7', foot_rights:'todos los derechos reservados', pd_rel:'También te puede interesar', pd_m1:'~9 min de entrega', pd_m2:'garantía completa', pd_m3:'vinculado al HWID', pd_dur:'Duración', pd_price:'Precio', pd_buy:'Comprar', pd_inq:'Consulta en Discord', pd_best:'Mejor valor', st_head:'Todos los productos', st_desc:'Doce builds premium en cinco series — panels, bypass, silent y aimkill. El mismo pipeline verificado.', st_search:'Buscar…', st_all:'Todas las series', so_feat:'Destacado', so_asc:'Precio · menor', so_desc:'Precio · mayor', so_az:'Nombre · A–Z', st_sort:'Ordenar', st_live:'contadores en vivo', ct_head:'Tu carrito', ct_go:'Finalizar pedido', ct_total:'Total', ct_items:'artículos', ct_empty:'Tu carrito está vacío.', ct_browse:'Ver tienda →', sp_t:'Abrir ticket de soporte', sp_d:'Llega directo a la cola de Discord — respondemos ahí.', sp_name:'Tu nombre', sp_disc:'Usuario de Discord', sp_topic:'Tema', sp_msg:'Describe tu solicitud', sp_send:'Enviar ticket', to1:'Problema de pedido', to2:'Problema de pago', to3:'Pregunta de producto', to4:'Reemplazo / garantía', to5:'Otro', t_copied:'Dirección copiada', t_slowa:'Espera — próximo pedido en', t_slowb:'s', t_name:'Escribe tu nombre', t_disc:'Escribe tu usuario de Discord para entregar', t_proof:'Sube primero el comprobante', t_tx:'Escribe el ID de transacción', t_img:'Solo PNG, JPG o WEBP', t_big:'Archivo demasiado grande (4 MB máx.)', t_ticket:'Ticket enviado — respuesta en Discord', chg_name:'Nombre de la tienda', chg_tag:'Eslogan', chg_disc:'Invitación de Discord', chg_save:'Emitir al sitio', chg_live:'✓ sitio actualizado', faq_q1:'¿Qué tan rápida es la entrega?', faq_a1:'Los pedidos aprobados llegan por MD de Discord en ~15 min de media; hasta una hora en hora punta.', faq_q2:'¿Y si mi pago es rechazado?', faq_a2:'No se cobra nada más. Abre un ticket con el ID del pedido y lo resolvemos en minutos.', faq_q3:'¿Hay garantía?', faq_a3:'Sí — cada plan incluye reemplazo garantizado toda la duración. Si falla sin culpa tuya, lo reemplazamos gratis.', faq_q4:'¿Una clave cubre dos regiones?', faq_a4:'Las claves están bloqueadas por región. Compra el producto de tu servidor o pregunta por packs multirregión.' });
+Object.assign(I18N.de, { off1_k:'Wochenende', off1_t:'Lifetime −20%', off1_d:'Auf alle Lifetime-Pläne, Freitag bis Sonntag.', off2_k:'Paket', off2_t:'30 Tage ×2', off2_d:'Kaufe 30 Tage, schenke einem Freund einen 2. Key zum halben Preis.', off3_k:'Treue', off3_t:'5. Bestellung gratis', off3_d:'Jede 5. 7-Tage-Bestellung geht auf uns — automatisch verfolgt.', tr1:'Jede Zahlung manuell geprüft', tr2:'Erstattung bei Nichtlieferung', tr3:'~9 Min. Lieferung', track_t:'Bestellung verfolgen', track_d:'Gib die Bestell-ID aus deiner Bestätigung ein (z. B. SX-1004).', track_btn:'Verfolgen', cp_product:'Produkt', cp_plan:'Plan', cp_price:'Preis', pf_name:'Dein Name', pf_disc:'Discord-Name', pf_note:'Lieferung per Discord-DM — prüfe den Namen.', pf_proof:'Nachweis hochladen', pf_proofhint:'PNG oder JPG, max. 4 MB', pf_tx:'Transaktions-ID', ok_before:'Deine Bestellung', ok_after:'wird geprüft. Unser Team schreibt dir auf Discord — ca. 15 Min. nach Freigabe.', foot_store:'Shop', foot_support:'Support', foot_l1:'Alle Produkte', foot_l2:'Angebote', foot_l3:'Warenkorb', foot_l4:'Discord-Server', foot_l5:'Antwort 24/7', foot_rights:'alle Rechte vorbehalten', pd_rel:'Das könnte dir auch gefallen', pd_m1:'~9 Min. Lieferung', pd_m2:'volle Garantie', pd_m3:'HWID-gebunden', pd_dur:'Dauer', pd_price:'Preis', pd_buy:'Kaufen', pd_inq:'Frage auf Discord', pd_best:'Bester Wert', st_head:'Alle Produkte', st_desc:'Zwölf Premium-Builds in fünf Serien — Panels, Bypass, Silent und Aimkill. Dieselbe geprüfte Lieferung.', st_search:'Suchen…', st_all:'Alle Serien', so_feat:'Empfohlen', so_asc:'Preis · aufsteigend', so_desc:'Preis · absteigend', so_az:'Name · A–Z', st_sort:'Sortieren', st_live:'Live-Zähler', ct_head:'Dein Warenkorb', ct_go:'Zur Kasse', ct_total:'Summe', ct_items:'Artikel', ct_empty:'Dein Warenkorb ist leer.', ct_browse:'Shop ansehen →', sp_t:'Ticket öffnen', sp_d:'Geht direkt in die Discord-Warteschlange — wir antworten dort.', sp_name:'Dein Name', sp_disc:'Discord-Name', sp_topic:'Thema', sp_msg:'Beschreibe dein Anliegen', sp_send:'Ticket senden', to1:'Bestellproblem', to2:'Zahlungsproblem', to3:'Produktfrage', to4:'Ersatz / Garantie', to5:'Sonstiges', t_copied:'Adresse kopiert', t_slowa:'Warte — nächste Bestellung in', t_slowb:'s', t_name:'Gib deinen Namen ein', t_disc:'Gib deinen Discord-Namen für die Lieferung ein', t_proof:'Lade zuerst den Nachweis hoch', t_tx:'Gib die Transaktions-ID ein', t_img:'Nur PNG, JPG oder WEBP', t_big:'Datei zu groß (max. 4 MB)', t_ticket:'Ticket gesendet — Antwort auf Discord', chg_name:'Shopname', chg_tag:'Slogan', chg_disc:'Discord-Einladung', chg_save:'An Live-Site senden', chg_live:'✓ Site aktualisiert', faq_q1:'Wie schnell ist die Lieferung?', faq_a1:'Freigegebene Bestellungen kommen per Discord-DM in ~15 Min., zu Stoßzeiten bis zu einer Stunde.', faq_q2:'Was, wenn meine Zahlung abgelehnt wird?', faq_a2:'Es wird nichts weiter belastet. Öffne ein Ticket mit der Bestell-ID — in Minuten gelöst.', faq_q3:'Gibt es eine Garantie?', faq_a3:'Ja — jeder Plan hat eine Ersatzgarantie für die gesamte Laufzeit. Defekt ohne dein Verschulden = gratis Ersatz.', faq_q4:'Deckt ein Key zwei Regionen?', faq_a4:'Keys sind regionsgebunden. Kaufe das Produkt deines Servers oder frage nach Mehrregionen-Packs.' });
+Object.assign(I18N.tr, { off1_k:'Hafta sonu', off1_t:'Lifetime −%20', off1_d:'Tüm Lifetime planlarda, cuma–pazar arası.', off2_k:'Paket', off2_t:'30 Gün ×2', off2_d:'30 günlük plan al, arkadaşına 2. anahtarı yarı fiyata ver.', off3_k:'Sadakat', off3_t:'5. sipariş bedava', off3_d:'Her 5. 7 günlük sipariş bizden — otomatik takip edilir.', tr1:'Her ödeme elle doğrulanır', tr2:'Teslim edilmezse iade', tr3:'~9 dk teslimat', track_t:'Siparişini takip et', track_d:'Onay mesajındaki sipariş ID’sini gir (örn. SX-1004).', track_btn:'Takip et', cp_product:'Ürün', cp_plan:'Plan', cp_price:'Fiyat', pf_name:'Adın', pf_disc:'Discord kullanıcı adı', pf_note:'Teslimat Discord DM ile — kullanıcı adını kontrol et.', pf_proof:'Ödeme kanıtı yükle', pf_proofhint:'PNG veya JPG, maks. 4 MB', pf_tx:'İşlem ID', ok_before:'Siparişin', ok_after:'inceleniyor. Ekibimiz Discord’dan yazacak — onaydan ~15 dk sonra.', foot_store:'Mağaza', foot_support:'Destek', foot_l1:'Tüm ürünler', foot_l2:'Teklifler', foot_l3:'Sepet', foot_l4:'Discord sunucusu', foot_l5:'7/24 yanıt', foot_rights:'tüm hakları saklıdır', pd_rel:'Bunlar da ilgini çekebilir', pd_m1:'~9 dk teslimat', pd_m2:'tam garanti', pd_m3:'HWID bağlı', pd_dur:'Süre', pd_price:'Fiyat', pd_buy:'Satın al', pd_inq:'Discord’dan sor', pd_best:'En iyi değer', st_head:'Tüm ürünler', st_desc:'Beş seride on iki premium build — panel, bypass, silent ve aimkill. Aynı doğrulanmış teslimat.', st_search:'Ara…', st_all:'Tüm seriler', so_feat:'Öne çıkan', so_asc:'Fiyat · artan', so_desc:'Fiyat · azalan', so_az:'Ad · A–Z', st_sort:'Sırala', st_live:'canlı sayaç', ct_head:'Sepetin', ct_go:'Siparişi tamamla', ct_total:'Toplam', ct_items:'ürün', ct_empty:'Sepetin boş.', ct_browse:'Mağazaya göz at →', sp_t:'Destek talebi aç', sp_d:'Doğrudan Discord kuyruğuna düşer — orada yanıtlarız.', sp_name:'Adın', sp_disc:'Discord kullanıcı adı', sp_topic:'Konu', sp_msg:'Talebini açıkla', sp_send:'Talebi gönder', to1:'Sipariş sorunu', to2:'Ödeme sorunu', to3:'Ürün sorusu', to4:'Değişim / garanti', to5:'Diğer', t_copied:'Adres kopyalandı', t_slowa:'Bekle — sonraki sipariş', t_slowb:'sn', t_name:'Adını gir', t_disc:'Teslimat için Discord adını gir', t_proof:'Önce ödeme kanıtını yükle', t_tx:'İşlem ID’sini gir', t_img:'Yalnızca PNG, JPG veya WEBP', t_big:'Dosya çok büyük (maks. 4 MB)', t_ticket:'Talep gönderildi — Discord’dan yanıt', chg_name:'Mağaza adı', chg_tag:'Slogan', chg_disc:'Discord daveti', chg_save:'Canlı siteye yayınla', chg_live:'✓ site güncellendi', faq_q1:'Teslimat ne kadar hızlı?', faq_a1:'Onaylanan siparişler Discord DM ile ortalama 15 dk’da gelir; yoğun saatlerde bir saate kadar.', faq_q2:'Ödemem reddedilirse?', faq_a2:'Ekstra ücret alınmaz. Sipariş ID’siyle ticket aç, dakikalar içinde çözülür.', faq_q3:'Garanti var mı?', faq_a3:'Evet — her plan tam süreli değişim garantili. Senin hatan olmadan bozulursa ücretsiz değiştiririz.', faq_q4:'Bir anahtar iki bölgeyi kapsar mı?', faq_a4:'Anahtarlar bölgeye kilitlidir. Sunucuna uygun ürünü al veya çok bölgeli paketleri sor.' });
+['en','ar','fr','es','de','tr'].forEach(l => {
+  I18N[l].t_msg = { en:'Describe your request', ar:'صف طلبك', fr:'Décrivez votre demande', es:'Describe tu solicitud', de:'Beschreibe dein Anliegen', tr:'Talebini açıkla' }[l];
+  I18N[l].pd_sel = { en:'Select', ar:'اختيار', fr:'Choisir', es:'Elegir', de:'Wählen', tr:'Seç' }[l];
+  I18N[l].faq_q5 = { en:'Do you offer refunds?', ar:'هل تقدمون استرداداً؟', fr:'Proposez-vous des remboursements ?', es:'¿Ofrecen reembolsos?', de:'Bietet ihr Erstattungen?', tr:'İade yapıyor musunuz?' }[l];
+  I18N[l].faq_a5 = { en:'Full refund if we fail to deliver within 24 hours of approval. Change-of-mind refunds are available before delivery.', ar:'استرداد كامل إن فشلنا بالتسليم خلال 24 ساعة من الموافقة. استرداد تغيير الرأي متاح قبل التسليم.', fr:'Remboursement intégral si nous ne livrons pas sous 24 h après approbation. Remboursement possible avant livraison.', es:'Reembolso total si no entregamos en 24 h tras la aprobación. Reembolso por cambio de opinión antes de la entrega.', de:'Volle Erstattung, wenn wir nicht innerhalb von 24 h nach Freigabe liefern. Rücktritt vor Lieferung möglich.', tr:'Onaydan 24 saat içinde teslim edemezsek tam iade. Teslimattan önce fikir değiştirme iadesi yapılabilir.' }[l];
+});
+const t = k => (I18N[LANG] && I18N[LANG][k]) || I18N.en[k] || k;
+function setT(el, key) {
+  const s = t(key);
+  let n = el.lastChild;
+  if (!n || n.nodeType !== 3) { n = document.createTextNode(''); el.appendChild(n); }
+  n.textContent = s;
+}
+function applyLang(code) {
+  LANG = code; localStorage.setItem('sx_lang', code);
+  document.documentElement.lang = code;
+  document.documentElement.dir = code === 'ar' ? 'rtl' : 'ltr';
+  document.querySelectorAll('[data-t]').forEach(el => setT(el, el.dataset.t));
+  document.querySelectorAll('[data-tph]').forEach(el => el.placeholder = t(el.dataset.tph));
+  const cur = document.getElementById('lang-cur'); if (cur) cur.textContent = code.toUpperCase();
+  document.querySelectorAll('.lang-opt').forEach(o => o.classList.toggle('on-lang', o.dataset.lang === code));
+  if (typeof renderStore === 'function') renderStore();
+}
+(function langUI() {
+  const btn = document.getElementById('lang-btn'), menu = document.getElementById('lang-menu');
+  const setOpen = o => { menu.classList.toggle('hidden', !o); btn.setAttribute('aria-expanded', o); };
+  btn.addEventListener('click', e => { e.stopPropagation(); setOpen(menu.classList.contains('hidden')); });
+  document.addEventListener('click', e => { if (!menu.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') setOpen(false); });
+  menu.addEventListener('click', e => { const b = e.target.closest('[data-lang]'); if (!b) return; applyLang(b.dataset.lang); setOpen(false); });
 })();
 
 // copy order ID on the success page
