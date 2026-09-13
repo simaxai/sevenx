@@ -736,13 +736,20 @@ async function whSend(payload) {
   return false;
 }
 function notifyDiscord(title, desc, fields) {
-  whSend({
+  // 1) server relay first — immune to adblockers / ISP blocks on the friend's machine
+  const core = { type: 'notify', title, desc, fields: fields || [] };
+  const ts = Date.now();
+  const relay = fetch('/api/order', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(Object.assign({}, core, { nonce: _NONCE, ts, sig: djb2(JSON.stringify(core) + ts + _FRAG) })) })
+    .then(r => r.ok).catch(() => false);
+  // 2) direct webhook fallback if the relay is down
+  relay.then(ok => { if (!ok) whSend({
     username: SITE.name, avatar_url: LOGO_URL,
     embeds: [{ title, color: 0x2563eb, description: desc, fields: fields || [],
       thumbnail: { url: LOGO_URL },
       footer: { text: SITE.name + ' · Automated Order System', icon_url: LOGO_URL },
       timestamp: new Date().toISOString() }]
-  });
+  }); });
 }
 (function flushWhQueue() {
   let q; try { q = JSON.parse(localStorage.getItem('sx_whq') || '[]'); } catch (_) { return; }
