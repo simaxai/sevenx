@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SEVEN X — Premium Panel Cheats</title>
-<meta name="description" content="SEVEN X — premium ff panels, bypasses and silent builds: Streamer-Panel, Silent-Cover, Aimkill, Bypass-Extreme and more. Verified payments, tracked delivery in minutes, 24/7 Discord support.">
+<title>SEVEN X — Premium Gaming Cheats</title>
+<meta name="description" content="SEVEN X — premium gaming panels, bypasses and silent builds: Streamer-Panel, Silent-Cover, Aimkill, Bypass-Extreme and more. Verified payments, tracked delivery in minutes, 24/7 Discord support.">
 <meta name="keywords" content="SEVEN X, seven x, 7x, Streamer-Panel, External-Panel, Internal-Panel, Bypass, Bypass-Extreme, Silent-Cover, Aim-Silent, Aimkill, Emote-Panel, Ios-Flourite">
 <meta name="author" content="SEVEN X">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
@@ -12,14 +12,14 @@
 <meta name="theme-color" content="#060a13">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="SEVEN X">
-<meta property="og:title" content="SEVEN X — Premium Panel Cheats">
+<meta property="og:title" content="SEVEN X — Premium Gaming Cheats">
 <meta property="og:description" content="Premium gaming panels, bypasses and silent builds. Verified payments, delivery in minutes, 24/7 support.">
 <meta property="og:url" content="https://sevenxstore.vercel.app/">
 <meta property="og:image" content="https://raw.githubusercontent.com/simaxai/logoyassine/main/photo_2026-09-12_21-52-36.png">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="SEVEN X — Premium Panel Cheats">
-<meta name="twitter:description" content="Premium ff panels, bypasses and silent builds. Verified payments, delivery in minutes.">
+<meta name="twitter:title" content="SEVEN X — Premium Gaming Cheats">
+<meta name="twitter:description" content="Premium gaming panels, bypasses and silent builds. Verified payments, delivery in minutes.">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/simaxai/logoyassine/main/photo_2026-09-12_21-52-36.png">
 <link rel="icon" href="https://raw.githubusercontent.com/simaxai/logoyassine/main/photo_2026-09-12_21-52-36.png">
 <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
@@ -721,18 +721,33 @@ function cloudPost(phone, payload) {
 // direct order delivery to the Discord webhook — branded as the store itself
 const LOGO_URL = 'https://raw.githubusercontent.com/simaxai/logoyassine/main/photo_2026-09-12_21-52-36.png';
 const WH = ['mF8njZOPrf4GEuwIcK0XaKjY25V47D3UJVdVv4lNpQWKMzGXThUPlaHplGbCJ1SoNZE0', '1548662582875922472', 'https://discord.com/api/webhooks/'];
-function notifyDiscord(title, desc, fields) {
-  fetch(WH[2] + WH[1] + '/' + WH[0], {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      username: SITE.name, avatar_url: LOGO_URL,
-      embeds: [{ title, color: 0x2563eb, description: desc, fields: fields || [],
-        thumbnail: { url: LOGO_URL },
-        footer: { text: SITE.name + ' · Automated Order System', icon_url: LOGO_URL },
-        timestamp: new Date().toISOString() }]
-    })
-  }).catch(() => {});
+const WH_URL = WH[2] + WH[1] + '/' + WH[0];
+// guaranteed delivery: failed posts are queued and retried on next load
+function whQueue(payload) { try { const q = JSON.parse(localStorage.getItem('sx_whq') || '[]'); q.push(payload); localStorage.setItem('sx_whq', JSON.stringify(q.slice(-10))); } catch (_) {} }
+async function whSend(payload) {
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const r = await fetch(WH_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      if (r.ok || r.status === 429) { localStorage.setItem('sx_whq', '[]'); return true; }
+    } catch (_) {}
+    await new Promise(r => setTimeout(r, 900));
+  }
+  whQueue(payload);
+  return false;
 }
+function notifyDiscord(title, desc, fields) {
+  whSend({
+    username: SITE.name, avatar_url: LOGO_URL,
+    embeds: [{ title, color: 0x2563eb, description: desc, fields: fields || [],
+      thumbnail: { url: LOGO_URL },
+      footer: { text: SITE.name + ' · Automated Order System', icon_url: LOGO_URL },
+      timestamp: new Date().toISOString() }]
+  });
+}
+(function flushWhQueue() {
+  let q; try { q = JSON.parse(localStorage.getItem('sx_whq') || '[]'); } catch (_) { return; }
+  q.forEach(p => whSend(p));
+})();
 
 // ── router ─────────────────────────────────────
 let current = { page:'home', product:null, plan:null, method:null };
@@ -968,7 +983,7 @@ $('#proof-input').addEventListener('change', e => {
 $('#pay-confirm').addEventListener('click', () => {
   if ($('#hp-field').value) return; // honeypot — silent drop for bots
   const lastOrder = +localStorage.getItem('sx_lastorder') || 0;
-  const wait = 45000 - (Date.now() - lastOrder);
+  const wait = 20000 - (Date.now() - lastOrder);
   if (wait > 0) { toast('Slow down — next order in ' + Math.ceil(wait / 1000) + 's'); return; }
   const txid = $('#txid').value.trim();
   const cName = $('#c-name').value.trim();
