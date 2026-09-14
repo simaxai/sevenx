@@ -841,17 +841,18 @@ function notifyDiscordInner(title, desc, fields) {
       footer: { text: SITE.name + ' · Automated Order System', icon_url: LOGO_URL },
       timestamp: new Date().toISOString() }]
   };
-  // 1) straight to the live webhook — works on every device and network
-  return whSend(payload).then(ok => {
-    // 2) if a blocker ate it (adblock/ISP), relay through our own server
-    if (!ok) {
-      const signed = { type: 'notify', title, desc, fields: fields || [], nonce: _NONCE };
-      const ts = Date.now();
-      return fetch('/api/order', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(Object.assign({}, signed, { ts, sig: djb2(JSON.stringify(signed) + ts + _FRAG) })) })
-        .then(r => r.ok).catch(() => false);
-    }
-    return true;
+  // two paths at once: direct webhook + same-origin server relay.
+  // green the moment EITHER lands; amber only if both truly fail (offline).
+  const signed = { type: 'notify', title, desc, fields: fields || [], nonce: _NONCE };
+  const ts = Date.now();
+  const relay = fetch('/api/order', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(Object.assign({}, signed, { ts, sig: djb2(JSON.stringify(signed) + ts + _FRAG) })) })
+    .then(r => r.ok).catch(() => false);
+  const direct = whSend(payload);
+  return new Promise(resolve => {
+    let done = false, failed = 0;
+    const finish = ok => { if (done) return; if (ok) { done = true; resolve(true); } else if (++failed >= 2) { done = true; resolve(false); } };
+    direct.then(finish); relay.then(finish);
   });
 }
 (function flushWhQueue() {
